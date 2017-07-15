@@ -1,0 +1,26 @@
+program teste;
+
+var
+	int i, j, n, v, h, a;
+	float b, c;
+
+{
+	i = 4;
+	j = 3;
+	v = i / j;
+	h = i % j;
+
+	if (i < j) { i = i+3; n = v/h; }     
+
+/*	if (i < j) { i = i+3; n = v/h; }
+	else { v = h; i = j; }
+	n = v;                               */
+
+/*	while (i < j) i = j + h;
+	i = 0;                               */
+
+/*	read (a, b, c);
+	write ("Valor de a+b:", a+b, "Valor de c:", c);  */
+}
+
+

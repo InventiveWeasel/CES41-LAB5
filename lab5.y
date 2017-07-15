@@ -239,6 +239,7 @@ void tabular (void);
 	int tipoexpr;
 	int nsubscr;
 	int nparams;
+	quadrupla quad;
 }
 %type	<infovar>	Variable
 %type	<infoexpr>	Expression  AuxExpr1  AuxExpr2  AuxExpr3  AuxExpr4  Term  Factor
@@ -428,12 +429,20 @@ Statement   	:  CompStat  |  IfStat  |  WhileStat  |  RepeatStat
             	|  ForStat  |  ReadStat  |  WriteStat  |  AssignStat
             	|  CallStat  |  ReturnStat  |  SCOLON {printf(";\n");}
 				;
-IfStat			:  IF OPPAR {tabular(); printf("if("); tab++;} Expression  CLPAR {printf(")\n");}
+IfStat			:  IF OPPAR {tabular(); printf("if("); tab++;} Expression  CLPAR
 				{
+					printf(")\n");
 					if($4.tipo!=LOGICO)
 						Incompatibilidade("Expressao do comando 'if' deve ser logica");
+					opndaux.tipo = ROTOPND;
+					$<quad>$ = GeraQuadrupla(OPJF, $4.opnd, opndidle, opndaux);
 				}
-					Statement {tab--;} ElseStat
+					Statement 
+					{
+						tab--;
+						$<quad>6->result.atr.rotulo = GeraQuadrupla(NOP, opndidle, opndidle, opndidle);
+					} 
+					ElseStat
 				;
 ElseStat		:  
 				|  ELSE {tabular(); printf("else\n"); tab++;} Statement {tab--;}
