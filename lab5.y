@@ -523,6 +523,7 @@ AssignStat  	: {tabular();} Variable ASSIGN {printf(" = ");} Expression SCOLON {
 						if($2.simb->tvar == NAOVAR || $2.simb->tid != IDVAR)
 							Esperado("Esperada uma variavel inteira, caractere, real ou logica para atribuicao.");
 						VerificarCompatibilidade("assign", $2.simb->tvar, $5.tipo);
+						GeraQuadrupla(OPATRIB,$5.opnd,opndidle,$2.opnd);
 					}
 				}
 				;
