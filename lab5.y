@@ -82,6 +82,22 @@ char *nometipid[5] = {" ", "IDPROG", "IDVAR", "IDFUNC", "IDPROC"};
 /* Strings para nomes dos tipos de variaveis */
 char *nometipvar[6]={"NAOVAR", "INTEIRO", "LOGICO", "REAL", "CARACTERE", "VOID"};
 
+/* Strings para operadores de quadruplas */
+
+char *nomeoperquad[21] = {"",
+	"OR", "AND", "LT", "LE", "GT", "GE", "EQ", "NE", "MAIS",
+	"MENOS", "MULT", "DIV", "RESTO", "MENUN", "NOT", "ATRIB",
+	"OPENMOD", "NOP", "JUMP", "JF"
+};
+
+/*
+	Strings para tipos de operandos de quadruplas
+ */
+
+char *nometipoopndquad[9] = {"IDLE",
+	"VAR", "INT", "REAL", "CARAC", "LOGIC", "CADEIA", "ROTULO", "MODULO"
+};
+
 /* Declaracoes para a tabela de simbolos */
 typedef struct celsimb celsimb;
 typedef celsimb *simbolo;
@@ -284,6 +300,10 @@ Prog			:  {
 					printf("program %s;\n\n", $3);
 					simb = escglobal = escopo = InsereSimb($3, IDPROG, NAOVAR, NULL);
 					InicCodIntermMod (simb);
+					opnd1.tipo = MODOPND;
+					opnd1.atr.modulo = modcorrente;
+					GeraQuadrupla (OPENMOD, opnd1, opndidle, opndidle);
+
 				}
 				   Decls  SubProgs  CompStat
 				{
@@ -970,6 +990,68 @@ simbolo NovaTemp (int tip) {
 	simb = InsereSimb (nometemp, IDVAR, tip, NULL);
 	simb->inic = simb->ref = VERDADE;
 	simb->array = FALSO; return simb;
+}
+
+void ImprimeQuadruplas () {
+	modhead p;
+	quadrupla q;
+	for (p = codintermed->prox; p != NULL; p = p->prox) {
+		printf ("\n\nQuadruplas do modulo %s:\n", p->modname->cadeia);
+		for (q = p->listquad->prox; q != NULL; q = q->prox) {
+			printf ("\n\t%4d) %s", q->num, nomeoperquad[q->oper]);
+			printf (", (%s", nometipoopndquad[q->opnd1.tipo]);
+			switch (q->opnd1.tipo) {
+				case IDLEOPND: break;
+				case VAROPND: printf (", %s", q->opnd1.atr.simb->cadeia); break;
+				case INTOPND: printf (", %d", q->opnd1.atr.valint); break;
+				case REALOPND: printf (", %g", q->opnd1.atr.valfloat); break;
+				case CHAROPND: printf (", %c", q->opnd1.atr.valchar); break;
+				case LOGICOPND: printf (", %d", q->opnd1.atr.vallogic); break;
+				case CADOPND: printf (", %s", q->opnd1.atr.valcad); break;
+				case ROTOPND: printf (", %d", q->opnd1.atr.rotulo->num); break;
+				case MODOPND: printf(", %s", q->opnd1.atr.modulo->modname->cadeia);
+					break;
+			}
+			printf (")");
+			printf (", (%s", nometipoopndquad[q->opnd2.tipo]);
+			switch (q->opnd2.tipo) {
+				case IDLEOPND: break;
+				case VAROPND: printf (", %s", q->opnd2.atr.simb->cadeia); break;
+				case INTOPND: printf (", %d", q->opnd2.atr.valint); break;
+				case REALOPND: printf (", %g", q->opnd2.atr.valfloat); break;
+				case CHAROPND: printf (", %c", q->opnd2.atr.valchar); break;
+				case LOGICOPND: printf (", %d", q->opnd2.atr.vallogic); break;
+				case CADOPND: printf (", %s", q->opnd2.atr.valcad); break;
+				case ROTOPND: printf (", %d", q->opnd2.atr.rotulo->num); break;
+				case MODOPND: printf(", %s", q->opnd2.atr.modulo->modname->cadeia);
+					break;
+			}
+			printf (")");
+			printf (", (%s", nometipoopndquad[q->result.tipo]);
+			switch (q->result.tipo) {
+				case IDLEOPND: break;
+				case VAROPND: printf (", %s", q->result.atr.simb->cadeia); break;
+				case INTOPND: printf (", %d", q->result.atr.valint); break;
+				case REALOPND: printf (", %g", q->result.atr.valfloat); break;
+				case CHAROPND: printf (", %c", q->result.atr.valchar); break;
+				case LOGICOPND: printf (", %d", q->result.atr.vallogic); break;
+				case CADOPND: printf (", %s", q->result.atr.valcad); break;
+				case ROTOPND: printf (", %d", q->result.atr.rotulo->num); break;
+				case MODOPND: printf(", %s", q->result.atr.modulo->modname->cadeia);
+					break;
+			}
+			printf (")");
+		}
+	}
+   printf ("\n");
+}
+
+void RenumQuadruplas (quadrupla quad1, quadrupla quad2) {
+	quadrupla q; int nquad;
+	for (q = quad1->prox, nquad = quad1->num; q != quad2; q = q->prox) {
+      nquad++;
+		q->num = nquad;
+	}
 }
 
 
