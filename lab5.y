@@ -535,6 +535,9 @@ Expression  	:  AuxExpr1
 					if($1.tipo!=LOGICO || $4.tipo!=LOGICO)
 						Incompatibilidade("Operando improprio para operador logico");
 					$$.tipo=LOGICO;
+					$$.opnd.tipo = VAROPND;  
+					$$.opnd.atr.simb = NovaTemp ($$.tipo);
+					GeraQuadrupla (OPOR, $1.opnd, $4.opnd, $$.opnd);
 				}
 				;
 AuxExpr1    	:  AuxExpr2
@@ -543,6 +546,9 @@ AuxExpr1    	:  AuxExpr2
 					if($1.tipo!=LOGICO || $4.tipo!=LOGICO)
 						Incompatibilidade("Operando improprio para operador logico");
 					$$.tipo=LOGICO;
+					$$.opnd.tipo = VAROPND;  
+					$$.opnd.atr.simb = NovaTemp ($$.tipo);
+					GeraQuadrupla (OPAND, $1.opnd, $4.opnd, $$.opnd);
 				}
 				;
 AuxExpr2    	:  AuxExpr3
@@ -551,6 +557,10 @@ AuxExpr2    	:  AuxExpr3
 					if($3.tipo!=LOGICO)
 						Incompatibilidade("Operando improprio para operador logico");
 					$$.tipo=LOGICO;
+					$$.opnd.tipo = VAROPND;  
+					$$.opnd.atr.simb = NovaTemp ($$.tipo);
+					GeraQuadrupla (OPNOT, $3.opnd, opndidle, $$.opnd);
+
 				}
 				;
 AuxExpr3    	:  AuxExpr4	
@@ -586,6 +596,18 @@ AuxExpr3    	:  AuxExpr4
 							break;
 					}
 					$$.tipo=LOGICO;
+					/* criando quadrupla */
+					$$.opnd.tipo = VAROPND;  
+					$$.opnd.atr.simb = NovaTemp ($$.tipo);
+					switch($2){
+						case LT: GeraQuadrupla(OPLT, $1.opnd, $4.opnd, $$.opnd); break;
+						case LE: GeraQuadrupla(OPLE, $1.opnd, $4.opnd, $$.opnd); break;
+						case GT: GeraQuadrupla(OPGT, $1.opnd, $4.opnd, $$.opnd); break;
+						case GE: GeraQuadrupla(OPGE, $1.opnd, $4.opnd, $$.opnd); break;
+						case EQ: GeraQuadrupla(OPEQ, $1.opnd, $4.opnd, $$.opnd); break;
+						case NE: GeraQuadrupla(OPNE, $1.opnd, $4.opnd, $$.opnd); break;
+					}
+
 				}
 				;
 AuxExpr4    	:  Term
@@ -605,6 +627,12 @@ AuxExpr4    	:  Term
 						$$.tipo=REAL;
 					else
 						$$.tipo=INTEIRO;
+					$$.opnd.tipo = VAROPND;
+					$$.opnd.atr.simb = NovaTemp($$.tipo);
+					switch($2){
+						case PL: GeraQuadrupla(OPMAIS, $1.opnd, $4.opnd, $$.opnd); break;
+						case MI: GeraQuadrupla(OPMENOS, $1.opnd, $4.opnd, $$.opnd); break;
+					}
 				}
 				;
 Term  	    	:  Factor
@@ -626,11 +654,20 @@ Term  	    	:  Factor
 								Incompatibilidade("Operando improprio para operador aritmetico");
 							if($1.tipo==REAL || $4.tipo==REAL) $$.tipo=REAL;
 							else $$.tipo=INTEIRO;
+							$$.opnd.tipo = VAROPND;
+							$$.opnd.atr.simb = NovaTemp($$.tipo);
+							if($2 == MU)
+								GeraQuadrupla(OPMULTIP, $1.opnd, $4.opnd, $$.opnd);
+							else
+								GeraQuadrupla(OPDIV, $1.opnd, $4.opnd, $$.opnd);
 							break;
 						case RE:
 							if(($1.tipo!=INTEIRO && $1.tipo!=CARACTERE) || ($4.tipo!=INTEIRO && $4.tipo!=CARACTERE))
 								Incompatibilidade("Operando improprio para operador resto");
 							$$.tipo=INTEIRO;
+							$$.opnd.tipo = VAROPND;
+							$$.opnd.atr.simb = NovaTemp($$.tipo);
+							GeraQuadrupla(OPRESTO, $1.opnd, $4.opnd, $$.opnd);
 							break;
 						default:
 							break;
@@ -642,13 +679,42 @@ Factor			:  Variable
 					if($1.simb != NULL) {
 						$1.simb->ref = VERDADE;
 						$$.tipo = $1.simb->tvar;
+						$$.opnd = $1.opnd;
 					}
 				}
-				|  INTCT {printf("%d", $1); $$.tipo = INTEIRO;}
-				|  FLOATCT {printf("%g", $1); $$.tipo = REAL;}
-				|  CHARCT {printf("\'%s\'", $1); $$.tipo = CARACTERE;}
-            	|  TRUE {printf("true"); $$.tipo = LOGICO;}
-				|  FALSE {printf("false"); $$.tipo = LOGICO;}
+				|  INTCT 
+					{
+						printf("%d", $1); $$.tipo = INTEIRO;
+						$$.opnd.tipo = INTOPND;
+						$$.opnd.atr.valint = $1;
+					}
+				|  FLOATCT 
+					{
+						printf("%g", $1); $$.tipo = REAL;
+						$$.opnd.tipo = REALOPND;
+						$$.opnd.atr.valfloat = $1;
+					}
+				|  CHARCT 
+					{
+						printf("\'%s\'", $1);
+						$$.tipo = CARACTERE;
+						$$.opnd.tipo = CHAROPND;
+						$$.opnd.atr.valchar = $1;
+					}
+            	|  TRUE 
+					{
+						printf("true");
+						$$.tipo = LOGICO;
+						$$.opnd.tipo = LOGICOPND;
+						$$.opnd.atr.vallogic = 1;
+					}
+				|  FALSE 
+					{
+						printf("false"); 
+						$$.tipo = LOGICO;
+						$$.opnd.tipo = LOGICOPND;
+						$$.opnd.atr.vallogic = 0;
+					}
 				|  NEG {printf("~");} Factor 
 				{
 					if($3.tipo != INTEIRO && $3.tipo!= REAL && $3.tipo!=CARACTERE)
@@ -657,12 +723,18 @@ Factor			:  Variable
 						$$.tipo = REAL;
 					else
 						$$.tipo = INTEIRO;
+					$$.opnd.tipo = VAROPND;
+					$$.opnd.atr.simb = NovaTemp($$.tipo);
+					GeraQuadrupla  (OPMENUN, $3.opnd, opndidle, $$.opnd);
+					
+
 				}
             	|  OPPAR {printf("(");} Expression  CLPAR
-				{
-					printf(")");
-					$$.tipo=$3.tipo;
-				}
+					{
+						printf(")");
+						$$.tipo=$3.tipo;
+						$$.opnd = $3.opnd;
+					}
 				|  FuncCall {$$.tipo = $1;}
 				;
 Variable		:  ID
@@ -691,6 +763,9 @@ Variable		:  ID
 							Esperado("subscrito\(s)");
 						else if($3!=$$.simb->ndims)
 							Incompatibilidade("Numero de subscritos incompativel com o declarado");
+						$$.opnd.tipo = VAROPND;
+						if($3 == 0)
+							$$.opnd.atr.simb = $$.simb;
 					}
 				}  
 				;
@@ -987,7 +1062,8 @@ simbolo NovaTemp (int tip) {
 	i --;
 	for (j = 0; j <= i; j++)
 		nometemp[2+i-j] = s[j];
-	simb = InsereSimb (nometemp, IDVAR, tip, NULL);
+	simb = InsereSimb (nometemp, IDVAR, tip, escopo);
+	printf("CHEGOU\n");
 	simb->inic = simb->ref = VERDADE;
 	simb->array = FALSO; return simb;
 }

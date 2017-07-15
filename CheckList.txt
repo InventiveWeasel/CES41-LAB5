@@ -1,0 +1,2 @@
+1. Criação do módulo principal do programa.
+2. Quadruplas para expressões com variáveis não indexadas.
