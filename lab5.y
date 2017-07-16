@@ -525,6 +525,7 @@ RepeatStat  	:  REPEAT
 				;
 ForStat	    	:  FOR OPPAR {tabular(); printf("for(");} Variable ASSIGN {printf(" = ");} Expression SCOLON 
 				{
+					/* $$$$$$ 9 $$$$$$ */
 					printf("; ");
 					if ($4.simb == NULL) {
 						ErroInterno("Variable null.");
@@ -533,10 +534,23 @@ ForStat	    	:  FOR OPPAR {tabular(); printf("for(");} Variable ASSIGN {printf("
 						$4.simb->inic = VERDADE;
 						if($4.simb->tid!=IDVAR || ($4.simb->tvar!=INTEIRO && $4.simb->tvar!=CARACTERE) || $4.simb->array!=FALSO)
 							Incompatibilidade("Variavel de inicializacao incompativel para o operador 'for'");
+						VerificarCompatibilidade("assign", $4.simb->tvar, $7.tipo);
+						GeraQuadrupla(OPATRIB,$7.opnd,opndidle,$4.opnd);
+						
+						/* quadrupla para verificacao da condicao */
+						$<quad>$ = GeraQuadrupla(NOP, opndidle, opndidle, opndidle);
 					}
 				}
-					Expression SCOLON {printf("; ");} Variable ASSIGN {printf(" = ");} Expression  CLPAR
+					Expression SCOLON {printf("; ");} Variable ASSIGN 
 				{
+					/* $$$$$$ 15 $$$$$$ */
+					printf(" = ");
+					opndaux.tipo = ROTOPND;
+					$<quad>$ = GeraQuadrupla(OPJF, $10.opnd, opndidle, opndaux);
+				} 
+					Expression  CLPAR
+				{
+					/* $$$$$$ 18 $$$$$$ */
 					printf(")\n");
 					if ($4.simb == NULL || $13.simb == NULL) {
 						ErroInterno("Variable null.");
@@ -547,8 +561,32 @@ ForStat	    	:  FOR OPPAR {tabular(); printf("for(");} Variable ASSIGN {printf("
 							Incompatibilidade("Variavel de atualizacao deve ser a mesma de inicializacao");
 						if(($7.tipo != INTEIRO && $7.tipo != CARACTERE) || ($16.tipo != INTEIRO && $16.tipo != CARACTERE) || $10.tipo!=LOGICO)
 							Incompatibilidade("Expressoes de tipo inadequado");
+						VerificarCompatibilidade("assign", $13.simb->tvar, $16.tipo);
+						$<quad>$ = GeraQuadrupla(OPATRIB,$16.opnd,opndidle,$13.opnd);
 					}
-				} Statement
+				} 
+					Statement 
+				{
+					/* $$$$$$ 20 $$$$$$ */
+					opndaux.tipo = ROTOPND;
+					opndaux.atr.rotulo = $<quad>9;
+					$<quad>$ = quadcorrente;
+					GeraQuadrupla(OPJUMP, opndidle, opndidle,opndaux);
+					
+					quadaux = $<quad>15->prox;
+					$<quad>15->prox = $<quad>18->prox;
+					$<quad>$->prox = quadaux;
+					$<quad>18->prox = quadcorrente;
+					
+					$<quad>$ = GeraQuadrupla(NOP, opndidle, opndidle, opndidle);
+					opndaux.atr.rotulo = $<quad>$;
+					$<quad>15->result = opndaux;
+					
+					RenumQuadruplas($<quad>9, quadcorrente);
+					
+					/* colocando expressao de atualizacao ao fim */
+					
+				}
 				;
 ReadStat   		:  READ OPPAR {tabular(); printf("read(");} ReadList 
 					{	

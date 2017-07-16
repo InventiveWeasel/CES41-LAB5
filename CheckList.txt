@@ -1,10 +1,11 @@
-1. Criação do módulo principal do programa.
-2. Quadruplas para expressões com variáveis não indexadas.
-3. Quadruplas para comandos de atribuição
-	Em assignStat, deve-se fazer a geração for ou dentro do else? Acontece erro?
-4. Quadruplas para IF sem ELSE
-5. Quadruplas para IF com ELSE
-6. Quadruplas para WHILE
-7. Quadruplas para READ e WRITE
-8. Quadruplas para variáveis indexadas
-9. Quadruplas para REPEAT
+1. 	Criação do módulo principal do programa.
+2. 	Quadruplas para expressões com variáveis não indexadas.
+3. 	Quadruplas para comandos de atribuição
+		Em assignStat, deve-se fazer a geração for ou dentro do else? Acontece erro?
+4. 	Quadruplas para IF sem ELSE
+5. 	Quadruplas para IF com ELSE
+6. 	Quadruplas para WHILE
+7. 	Quadruplas para READ e WRITE
+8. 	Quadruplas para variáveis indexadas
+9. 	Quadruplas para REPEAT
+10. 	Quadruplas para FOR
