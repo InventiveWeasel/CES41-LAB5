@@ -58,6 +58,10 @@ void comentario (void);
 #define	PARAM		21
 #define	OPREAD		22
 #define	OPWRITE		23
+#define	IND			24
+#define	INDEX		25
+#define	CONTAPONT	26
+#define	ATRIBPONT	27
 
 /* Definicoes de constantes para os tipos dos operandos */
 #define	IDLEOPND	0
@@ -87,10 +91,11 @@ char *nometipvar[6]={"NAOVAR", "INTEIRO", "LOGICO", "REAL", "CARACTERE", "VOID"}
 
 /* Strings para operadores de quadruplas */
 
-char *nomeoperquad[24] = {"",
+char *nomeoperquad[28] = {"",
 	"OR", "AND", "LT", "LE", "GT", "GE", "EQ", "NE", "MAIS",
 	"MENOS", "MULT", "DIV", "RESTO", "MENUN", "NOT", "ATRIB",
-	"OPENMOD", "NOP", "JUMP", "JF", "PARAM", "READ", "WRITE"
+	"OPENMOD", "NOP", "JUMP", "JF", "PARAM", "READ", "WRITE",
+	"IND", "INDEX", "CONTAPONT", "ATRIBPONT"
 };
 
 /*
@@ -190,7 +195,7 @@ int tipocorrente;
 int declparam;
 
 /* Variaveis globais para o manuseio das quadruplas */
-quadrupla quadcorrente, quadaux;
+quadrupla quadcorrente, quadaux, quadaux2;
 modhead codintermed, modcorrente;
 int oper, numquadcorrente;
 operando opnd1, opnd2, result, opndaux;
@@ -530,22 +535,65 @@ ForStat	    	:  FOR OPPAR {tabular(); printf("for(");} Variable ASSIGN {printf("
 				} Statement
 				;
 ReadStat   		:  READ OPPAR {tabular(); printf("read(");} ReadList 
-					{
-						opnd1.tipo = INTOPND;
-						opnd1.atr.valint = $4;
-						GeraQuadrupla(OPREAD, opnd1, opndidle, opndidle);
+					{	
+						if($4 != 0){
+							opnd1.tipo = INTOPND;
+							opnd1.atr.valint = $4;
+							GeraQuadrupla(OPREAD, opnd1, opndidle, opndidle);
+						}
 					}
 					CLPAR SCOLON {printf(");\n");}
 				;
 ReadList		:  Variable
 					{
-						$$ = 1;
-						GeraQuadrupla(PARAM, $1.opnd, opndidle,opndidle);
+						if($1.simb->ndims == 0){
+							$$ = 1;
+							GeraQuadrupla(PARAM, $1.opnd, opndidle,opndidle);
+						}
+						else{
+							opnd2.tipo = VAROPND;
+							opnd2.atr.simb = NovaTemp ($1.opnd.tipo);
+							GeraQuadrupla(PARAM, opnd2, opndidle, opndidle);
+							opnd1.tipo = INTOPND;
+							opnd1.atr.valint = 1;
+							GeraQuadrupla(OPREAD, opnd1, opndidle, opndidle);
+							GeraQuadrupla(ATRIBPONT, opnd2, opndidle, $1.opnd);
+							$$ = 0;
+						}
 					}
 				|  ReadList COMMA {printf(", ");} Variable
 					{
-						$$ = $1 + 1;
-						GeraQuadrupla(PARAM, $4.opnd, opndidle, opndidle);
+						if($4.simb->ndims == 0){
+							$$ = $1 + 1;
+							/* Guarda para quando aparecer um vetor */
+							quadaux = GeraQuadrupla(PARAM, $4.opnd, opndidle, opndidle);
+						}
+						else{
+							opnd2.tipo = VAROPND;
+							opnd2.atr.simb = NovaTemp ($4.opnd.tipo);
+							quadaux2 = GeraQuadrupla(PARAM, opnd2, opndidle, opndidle);
+							opnd1.tipo = INTOPND;
+							opnd1.atr.valint = $1;
+							$<quad>$ = GeraQuadrupla(OPREAD, opnd1, opndidle, opndidle);
+							printf("\nquad1prox: %s\n", nomeoperquad[quadaux->oper]);
+							printf("\nquad2: %s\n", nomeoperquad[quadaux2->oper]);
+							printf("\n$quad$: %s\n", nomeoperquad[$<quad>$->oper]);
+							
+							/* Read do vetor */
+							opnd1.atr.valint = 1;
+							GeraQuadrupla(OPREAD, opnd1, opndidle, opndidle);
+							GeraQuadrupla(ATRIBPONT, opnd2, opndidle, $4.opnd);
+							
+							/* Troca de referencias */
+							quadaux2->prox = $<quad>$->prox;
+							$<quad>$->prox = quadaux->prox;
+							quadaux->prox = $<quad>$;
+							RenumQuadruplas(quadaux, quadaux2->prox);
+							
+							/* atualizacao */
+							$$ = 0;
+						}
+						
 					}
 				;
 WriteStat   	:  WRITE OPPAR {tabular(); printf("write(");} WriteList 
@@ -608,7 +656,10 @@ AssignStat  	: {tabular();} Variable ASSIGN {printf(" = ");} Expression SCOLON {
 						if($2.simb->tvar == NAOVAR || $2.simb->tid != IDVAR)
 							Esperado("Esperada uma variavel inteira, caractere, real ou logica para atribuicao.");
 						VerificarCompatibilidade("assign", $2.simb->tvar, $5.tipo);
-						GeraQuadrupla(OPATRIB,$5.opnd,opndidle,$2.opnd);
+						if($2.simb->ndims == 0)
+							GeraQuadrupla(OPATRIB,$5.opnd,opndidle,$2.opnd);
+						else
+							GeraQuadrupla(ATRIBPONT, $5.opnd, opndidle, $2.opnd);
 					}
 				}
 				;
@@ -766,6 +817,11 @@ Factor			:  Variable
 						$1.simb->ref = VERDADE;
 						$$.tipo = $1.simb->tvar;
 						$$.opnd = $1.opnd;
+						if($1.simb->ndims != 0){
+							result.atr.simb = NovaTemp(INTOPND);
+							result.tipo = VAROPND;
+							GeraQuadrupla(CONTAPONT, $1.opnd, opndidle, result);
+						}
 					}
 				}
 				|  INTCT 
@@ -852,6 +908,16 @@ Variable		:  ID
 						$$.opnd.tipo = VAROPND;
 						if($3 == 0)
 							$$.opnd.atr.simb = $$.simb;
+						else{
+							/* Caso seja um vetor */
+							$$.opnd.tipo = VAROPND;
+							$$.opnd.atr.simb = NovaTemp(INTOPND);
+							opnd1.tipo = VAROPND;
+							opnd1.atr.simb = $$.simb;
+							opnd2.tipo = INTOPND;
+							opnd2.atr.valint = $3;
+							GeraQuadrupla(INDEX, opnd1, opnd2, $$.opnd);
+						}
 					}
 				}  
 				;
@@ -862,6 +928,8 @@ Subscript		:  OPBRAK {printf("[");} AuxExpr4  CLBRAK {printf("]");}
 				{
 					if($3.tipo!=INTEIRO && $3.tipo!=CARACTERE)
 						Incompatibilidade("Tipo inadequado para subscrito");
+					/* Empilhando índices do vetor */
+					GeraQuadrupla(IND, $3.opnd, opndidle, opndidle);
 				}
 				;
 FuncCall    	:  ID OPPAR {printf("%s()", $1);} CLPAR
