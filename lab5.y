@@ -55,6 +55,9 @@ void comentario (void);
 #define	NOP			18
 #define	OPJUMP		19
 #define	OPJF		20
+#define	PARAM		21
+#define	OPREAD		22
+#define	OPWRITE		23
 
 /* Definicoes de constantes para os tipos dos operandos */
 #define	IDLEOPND	0
@@ -84,10 +87,10 @@ char *nometipvar[6]={"NAOVAR", "INTEIRO", "LOGICO", "REAL", "CARACTERE", "VOID"}
 
 /* Strings para operadores de quadruplas */
 
-char *nomeoperquad[21] = {"",
+char *nomeoperquad[24] = {"",
 	"OR", "AND", "LT", "LE", "GT", "GE", "EQ", "NE", "MAIS",
 	"MENOS", "MULT", "DIV", "RESTO", "MENUN", "NOT", "ATRIB",
-	"OPENMOD", "NOP", "JUMP", "JF"
+	"OPENMOD", "NOP", "JUMP", "JF", "PARAM", "READ", "WRITE"
 };
 
 /*
@@ -240,12 +243,14 @@ void tabular (void);
 	int nsubscr;
 	int nparams;
 	quadrupla quad;
+	int nargs;
 }
 %type	<infovar>	Variable
-%type	<infoexpr>	Expression  AuxExpr1  AuxExpr2  AuxExpr3  AuxExpr4  Term  Factor
+%type	<infoexpr>	Expression  AuxExpr1  AuxExpr2  AuxExpr3  AuxExpr4  Term  Factor  WriteElem
 %type	<nsubscr>	SubscrList
 %type	<nparams>	ExprList
 %type 	<tipoexpr>	FuncCall
+%type	<nargs>		ReadList  WriteList
 %token 				CALL
 %token 				CHAR
 %Token 				ELSE
@@ -524,18 +529,52 @@ ForStat	    	:  FOR OPPAR {tabular(); printf("for(");} Variable ASSIGN {printf("
 					}
 				} Statement
 				;
-ReadStat   		:  READ OPPAR {tabular(); printf("read(");} ReadList CLPAR SCOLON {printf(");\n");}
+ReadStat   		:  READ OPPAR {tabular(); printf("read(");} ReadList 
+					{
+						opnd1.tipo = INTOPND;
+						opnd1.atr.valint = $4;
+						GeraQuadrupla(OPREAD, opnd1, opndidle, opndidle);
+					}
+					CLPAR SCOLON {printf(");\n");}
 				;
 ReadList		:  Variable
+					{
+						$$ = 1;
+						GeraQuadrupla(PARAM, $1.opnd, opndidle,opndidle);
+					}
 				|  ReadList COMMA {printf(", ");} Variable
+					{
+						$$ = $1 + 1;
+						GeraQuadrupla(PARAM, $4.opnd, opndidle, opndidle);
+					}
 				;
-WriteStat   	:  WRITE OPPAR {tabular(); printf("write(");} WriteList CLPAR SCOLON {printf(");\n");}
+WriteStat   	:  WRITE OPPAR {tabular(); printf("write(");} WriteList 
+					{
+						opnd1.tipo = INTOPND;
+						opnd1.atr.valint = $4;
+						GeraQuadrupla (OPWRITE, opnd1, opndidle, opndidle);
+					} 
+					CLPAR SCOLON {printf(");\n");}
 				;
 WriteList		:  WriteElem
+					{
+						$$ = 1;
+						GeraQuadrupla (PARAM, $1.opnd, opndidle, opndidle);
+					}
 				|  WriteList COMMA {printf(", ");} WriteElem
+					{
+						$$ = $1 + 1;
+						GeraQuadrupla (PARAM, $4.opnd, opndidle, opndidle);
+					}
 				;
-WriteElem		:  STRING {printf("\"%s\"", $1);}
-				|  Expression  
+WriteElem		:  STRING 
+					{
+						printf("\"%s\"", $1);
+						$$.opnd.tipo = CADOPND;
+						$$.opnd.atr.valcad = malloc(strlen($1) + 1);
+						strcpy($$.opnd.atr.valcad, $1);
+					}
+				|  Expression  /*  default:   $$ = $1   */
 				;
 CallStat    	:  CALL ID OPPAR {tabular(); printf("call %s();\n", $2); VerificarFuncao($2, 0);} CLPAR SCOLON
 				|  CALL ID OPPAR
