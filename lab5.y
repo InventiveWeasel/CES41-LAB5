@@ -438,21 +438,58 @@ IfStat			:  IF OPPAR {tabular(); printf("if("); tab++;} Expression  CLPAR
 					$<quad>$ = GeraQuadrupla(OPJF, $4.opnd, opndidle, opndaux);
 				}
 					Statement 
-					{
-						tab--;
-						$<quad>6->result.atr.rotulo = GeraQuadrupla(NOP, opndidle, opndidle, opndidle);
-					} 
+				{
+					tab--;
+					$<quad>$ = quadcorrente;
+					$<quad>6->result.atr.rotulo = GeraQuadrupla(NOP, opndidle, opndidle, opndidle);
+				} 
 					ElseStat
+				{
+					if ($<quad>8->prox != quadcorrente) {
+						quadaux = $<quad>8->prox;
+						$<quad>8->prox = quadaux->prox;
+						quadaux->prox = $<quad>8->prox->prox;
+						$<quad>8->prox->prox = quadaux;
+						RenumQuadruplas ($<quad>8, quadcorrente);
+					}
+				}
 				;
 ElseStat		:  
-				|  ELSE {tabular(); printf("else\n"); tab++;} Statement {tab--;}
+				|  	ELSE 
+				{	
+					tabular();
+					printf("else\n");
+					tab++;
+					opndaux.tipo = ROTOPND;
+					$<quad>$ = GeraQuadrupla (OPJUMP, opndidle, opndidle, opndaux);
+
+				} 
+					Statement 
+				{
+					tab--;
+					$<quad>2->result.atr.rotulo = GeraQuadrupla (NOP, opndidle, opndidle, opndidle);
+				}
 				;
-WhileStat   	:  WHILE OPPAR {tabular(); printf("while(");} Expression CLPAR {printf(")\n");} 
+WhileStat   	:  WHILE OPPAR 
+				{
+					tabular(); 
+					printf("while(");
+					$<quad>$ = GeraQuadrupla(NOP, opndidle,opndidle,opndidle);
+				} 
+					Expression CLPAR {printf(")\n");} 
 				{
 					if($4.tipo!=LOGICO)
 						Incompatibilidade("Expressao do comando 'while' deve ser logica");
+					opndaux.tipo = ROTOPND;
+					$<quad>$ = GeraQuadrupla(OPJF, opndidle, opndidle, opndaux);
 				}
 					Statement
+				{
+					opndaux.tipo = ROTOPND;
+					$<quad>$ = GeraQuadrupla(OPJUMP, opndidle,opndidle,opndaux);
+					$<quad>$->result.atr.rotulo = $<quad>3;
+					$<quad>7->result.atr.rotulo = GeraQuadrupla(NOP, opndidle, opndidle, opndidle);
+				}
 				;
 RepeatStat  	:  REPEAT {tabular(); printf("repeat\n");} Statement  WHILE OPPAR {tabular(); printf("while(");} Expression CLPAR SCOLON {printf(");\n");}
 				{
@@ -1073,7 +1110,6 @@ simbolo NovaTemp (int tip) {
 	for (j = 0; j <= i; j++)
 		nometemp[2+i-j] = s[j];
 	simb = InsereSimb (nometemp, IDVAR, tip, escopo);
-	printf("CHEGOU\n");
 	simb->inic = simb->ref = VERDADE;
 	simb->array = FALSO; return simb;
 }
