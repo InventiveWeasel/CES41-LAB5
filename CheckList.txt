@@ -7,3 +7,4 @@
 6. Quadruplas para WHILE
 7. Quadruplas para READ e WRITE
 8. Quadruplas para variáveis indexadas
+9. Quadruplas para REPEAT

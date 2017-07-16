@@ -491,7 +491,7 @@ WhileStat   	:  WHILE OPPAR
 					if($4.tipo!=LOGICO)
 						Incompatibilidade("Expressao do comando 'while' deve ser logica");
 					opndaux.tipo = ROTOPND;
-					$<quad>$ = GeraQuadrupla(OPJF, opndidle, opndidle, opndaux);
+					$<quad>$ = GeraQuadrupla(OPJF, $4.opnd, opndidle, opndaux);
 				}
 					Statement
 				{
@@ -501,10 +501,26 @@ WhileStat   	:  WHILE OPPAR
 					$<quad>7->result.atr.rotulo = GeraQuadrupla(NOP, opndidle, opndidle, opndidle);
 				}
 				;
-RepeatStat  	:  REPEAT {tabular(); printf("repeat\n");} Statement  WHILE OPPAR {tabular(); printf("while(");} Expression CLPAR SCOLON {printf(");\n");}
+RepeatStat  	:  REPEAT 
+				{
+					tabular();
+					printf("repeat\n");
+					$<quad>$ = GeraQuadrupla(NOP, opndidle, opndidle, opndidle);
+				} 
+					Statement  WHILE OPPAR 
+				{
+					tabular();
+					printf("while(");
+				} 
+					Expression CLPAR SCOLON {printf(");\n");}
 				{
 					if($7.tipo!=LOGICO)
 						Incompatibilidade("Expressao do comando 'do repeat' deve ser logica");
+					opndaux.tipo = ROTOPND;
+					quadaux = GeraQuadrupla(OPJF, $7.opnd, opndidle, opndaux);
+					opndaux.atr.rotulo = $<quad>2;
+					GeraQuadrupla(OPJUMP, opndidle, opndidle, opndaux);
+					quadaux->result.atr.rotulo = GeraQuadrupla(NOP, opndidle, opndidle, opndidle);
 				}
 				;
 ForStat	    	:  FOR OPPAR {tabular(); printf("for(");} Variable ASSIGN {printf(" = ");} Expression SCOLON 
