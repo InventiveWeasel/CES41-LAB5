@@ -1,0 +1,158 @@
+program primos;
+
+var
+    logic achou;
+    int n, div, resto, cont, num;
+{
+    read(n);
+    write(n, " primeiros numeros naturais primos:\n\n");
+    if(n > 0)
+        {
+            num = 1;
+            cont = 0;
+            while(cont < n)
+            {
+                num = num + 1;
+                div = 2;
+                achou = false;
+                while(achou == false && div * div <= num)
+                {
+                    resto = num % div;
+                    if(resto == 0)
+                        achou = true;
+                    else
+                        div = div + 1;
+                }
+                if(achou == false)
+                    {
+                        write(num, "\n");
+                        cont = cont + 1;
+                    }
+            }
+        }
+}
+n do escopo primos nao inicializado
+
+
+   TABELA  DE  SIMBOLOS:
+
+Classe 1:
+  div(IDVAR INTEIRO), escopo: primos
+	Inicializado: 1, Referenciado: 1
+
+Classe 4:
+  ##1(IDVAR LOGICO), escopo: primos
+	Inicializado: 1, Referenciado: 1
+
+Classe 5:
+  ##2(IDVAR LOGICO), escopo: primos
+	Inicializado: 1, Referenciado: 1
+
+  resto(IDVAR INTEIRO), escopo: primos
+	Inicializado: 1, Referenciado: 1
+
+Classe 6:
+  ##10(IDVAR INTEIRO), escopo: primos
+	Inicializado: 1, Referenciado: 1
+
+  ##3(IDVAR INTEIRO), escopo: primos
+	Inicializado: 1, Referenciado: 1
+
+Classe 7:
+  ##11(IDVAR LOGICO), escopo: primos
+	Inicializado: 1, Referenciado: 1
+
+  ##4(IDVAR LOGICO), escopo: primos
+	Inicializado: 1, Referenciado: 1
+
+Classe 8:
+  ##12(IDVAR INTEIRO), escopo: primos
+	Inicializado: 1, Referenciado: 1
+
+  ##5(IDVAR INTEIRO), escopo: primos
+	Inicializado: 1, Referenciado: 1
+
+Classe 9:
+  ##6(IDVAR LOGICO), escopo: primos
+	Inicializado: 1, Referenciado: 1
+
+Classe 10:
+  ##7(IDVAR LOGICO), escopo: primos
+	Inicializado: 1, Referenciado: 1
+
+Classe 11:
+  ##8(IDVAR INTEIRO), escopo: primos
+	Inicializado: 1, Referenciado: 1
+
+Classe 12:
+  ##9(IDVAR LOGICO), escopo: primos
+	Inicializado: 1, Referenciado: 1
+
+Classe 14:
+  num(IDVAR INTEIRO), escopo: primos
+	Inicializado: 1, Referenciado: 1
+
+Classe 18:
+  n(IDVAR INTEIRO), escopo: primos
+	Inicializado: 0, Referenciado: 1
+
+Classe 22:
+  cont(IDVAR INTEIRO), escopo: primos
+	Inicializado: 1, Referenciado: 1
+
+  achou(IDVAR LOGICO), escopo: primos
+	Inicializado: 1, Referenciado: 1
+
+  primos(IDPROG NAOVAR), escopo: null
+	Variaveis:  ##12(INTEIRO) ##11(LOGICO) ##10(INTEIRO) ##9(LOGICO) ##8(INTEIRO) ##7(LOGICO) ##6(LOGICO) ##5(INTEIRO) ##4(LOGICO) ##3(INTEIRO) ##2(LOGICO) ##1(LOGICO) num(INTEIRO) cont(INTEIRO) resto(INTEIRO) div(INTEIRO) n(INTEIRO) achou(LOGICO)
+
+
+
+Quadruplas do modulo primos:
+
+	   1) OPENMOD, (MODULO, primos), (IDLE), (IDLE)
+	   2) PARAM, (VAR, n), (IDLE), (IDLE)
+	   3) READ, (INT, 1), (IDLE), (IDLE)
+	   4) PARAM, (VAR, n), (IDLE), (IDLE)
+	   5) PARAM, (CADEIA,  primeiros numeros naturais primos:\n\n), (IDLE), (IDLE)
+	   6) WRITE, (INT, 2), (IDLE), (IDLE)
+	   7) GT, (VAR, n), (INT, 0), (VAR, ##1)
+	   8) JF, (VAR, ##1), (IDLE), (ROTULO, 46)
+	   9) ATRIB, (INT, 1), (IDLE), (VAR, num)
+	  10) ATRIB, (INT, 0), (IDLE), (VAR, cont)
+	  11) NOP, (IDLE), (IDLE), (IDLE)
+	  12) LT, (VAR, cont), (VAR, n), (VAR, ##2)
+	  13) JF, (VAR, ##2), (IDLE), (ROTULO, 45)
+	  14) MAIS, (VAR, num), (INT, 1), (VAR, ##3)
+	  15) ATRIB, (VAR, ##3), (IDLE), (VAR, num)
+	  16) ATRIB, (INT, 2), (IDLE), (VAR, div)
+	  17) ATRIB, (LOGIC, 0), (IDLE), (VAR, achou)
+	  18) NOP, (IDLE), (IDLE), (IDLE)
+	  19) EQ, (VAR, achou), (LOGIC, 0), (VAR, ##4)
+	  20) MULT, (VAR, div), (VAR, div), (VAR, ##5)
+	  21) LE, (VAR, ##5), (VAR, num), (VAR, ##6)
+	  22) AND, (VAR, ##4), (VAR, ##6), (VAR, ##7)
+	  23) JF, (VAR, ##7), (IDLE), (ROTULO, 35)
+	  24) RESTO, (VAR, num), (VAR, div), (VAR, ##8)
+	  25) ATRIB, (VAR, ##8), (IDLE), (VAR, resto)
+	  26) EQ, (VAR, resto), (INT, 0), (VAR, ##9)
+	  27) JF, (VAR, ##9), (IDLE), (ROTULO, 30)
+	  28) ATRIB, (LOGIC, 1), (IDLE), (VAR, achou)
+	  29) JUMP, (IDLE), (IDLE), (ROTULO, 33)
+	  30) NOP, (IDLE), (IDLE), (IDLE)
+	  31) MAIS, (VAR, div), (INT, 1), (VAR, ##10)
+	  32) ATRIB, (VAR, ##10), (IDLE), (VAR, div)
+	  33) NOP, (IDLE), (IDLE), (IDLE)
+	  34) JUMP, (IDLE), (IDLE), (ROTULO, 18)
+	  35) NOP, (IDLE), (IDLE), (IDLE)
+	  36) EQ, (VAR, achou), (LOGIC, 0), (VAR, ##11)
+	  37) JF, (VAR, ##11), (IDLE), (ROTULO, 43)
+	  38) PARAM, (VAR, num), (IDLE), (IDLE)
+	  39) PARAM, (CADEIA, \n), (IDLE), (IDLE)
+	  40) WRITE, (INT, 2), (IDLE), (IDLE)
+	  41) MAIS, (VAR, cont), (INT, 1), (VAR, ##12)
+	  42) ATRIB, (VAR, ##12), (IDLE), (VAR, cont)
+	  43) NOP, (IDLE), (IDLE), (IDLE)
+	  44) JUMP, (IDLE), (IDLE), (ROTULO, 11)
+	  45) NOP, (IDLE), (IDLE), (IDLE)
+	  46) NOP, (IDLE), (IDLE), (IDLE)

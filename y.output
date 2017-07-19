@@ -1,0 +1,2725 @@
+   0  $accept : Prog $end
+
+   1  $$1 :
+
+   2  $$2 :
+
+   3  $$3 :
+
+   4  Prog : $$1 PROGRAM ID SCOLON $$2 Decls SubProgs $$3 CompStat
+
+   5  Decls :
+
+   6  $$4 :
+
+   7  Decls : VAR $$4 DeclList
+
+   8  DeclList : Declaration
+   9           | DeclList Declaration
+
+  10  Declaration : Type ElemList SCOLON
+
+  11  Type : INT
+  12       | FLOAT
+  13       | CHAR
+  14       | LOGIC
+
+  15  ElemList : Elem
+
+  16  $$5 :
+
+  17  ElemList : ElemList COMMA $$5 Elem
+
+  18  $$6 :
+
+  19  Elem : ID $$6 DimList
+
+  20  DimList :
+  21          | DimList Dim
+
+  22  Dim : OPBRAK INTCT CLBRAK
+
+  23  SubProgs :
+  24           | SubProgs SubProgDecl
+
+  25  SubProgDecl : Header Decls CompStat
+
+  26  Header : FuncHeader
+  27         | ProcHeader
+
+  28  $$7 :
+
+  29  $$8 :
+
+  30  FuncHeader : FUNCTION $$7 Type ID OPPAR $$8 FuncHeaderAux
+
+  31  FuncHeaderAux : CLPAR SCOLON
+  32                | ParamList CLPAR SCOLON
+
+  33  $$9 :
+
+  34  ProcHeader : PROCEDURE ID OPPAR $$9 CLPAR SCOLON
+
+  35  $$10 :
+
+  36  ProcHeader : PROCEDURE ID OPPAR $$10 ParamList CLPAR SCOLON
+
+  37  ParamList : Parameter
+
+  38  $$11 :
+
+  39  ParamList : ParamList COMMA $$11 Parameter
+
+  40  Parameter : Type ID
+
+  41  $$12 :
+
+  42  CompStat : OPBRACE $$12 StatList CLBRACE
+
+  43  StatList :
+  44           | StatList Statement
+
+  45  Statement : CompStat
+  46            | IfStat
+  47            | WhileStat
+  48            | RepeatStat
+  49            | ForStat
+  50            | ReadStat
+  51            | WriteStat
+  52            | AssignStat
+  53            | CallStat
+  54            | ReturnStat
+  55            | SCOLON
+
+  56  $$13 :
+
+  57  $$14 :
+
+  58  $$15 :
+
+  59  IfStat : IF OPPAR $$13 Expression CLPAR $$14 Statement $$15 ElseStat
+
+  60  ElseStat :
+
+  61  $$16 :
+
+  62  ElseStat : ELSE $$16 Statement
+
+  63  $$17 :
+
+  64  $$18 :
+
+  65  $$19 :
+
+  66  WhileStat : WHILE OPPAR $$17 Expression CLPAR $$18 $$19 Statement
+
+  67  $$20 :
+
+  68  $$21 :
+
+  69  $$22 :
+
+  70  RepeatStat : REPEAT $$20 Statement WHILE OPPAR $$21 Expression CLPAR SCOLON $$22
+
+  71  $$23 :
+
+  72  $$24 :
+
+  73  $$25 :
+
+  74  $$26 :
+
+  75  $$27 :
+
+  76  $$28 :
+
+  77  ForStat : FOR OPPAR $$23 Variable ASSIGN $$24 Expression SCOLON $$25 Expression SCOLON $$26 Variable ASSIGN $$27 Expression CLPAR $$28 Statement
+
+  78  $$29 :
+
+  79  $$30 :
+
+  80  ReadStat : READ OPPAR $$29 ReadList $$30 CLPAR SCOLON
+
+  81  ReadList : Variable
+
+  82  $$31 :
+
+  83  ReadList : ReadList COMMA $$31 Variable
+
+  84  $$32 :
+
+  85  $$33 :
+
+  86  WriteStat : WRITE OPPAR $$32 WriteList $$33 CLPAR SCOLON
+
+  87  WriteList : WriteElem
+
+  88  $$34 :
+
+  89  WriteList : WriteList COMMA $$34 WriteElem
+
+  90  WriteElem : STRING
+  91            | Expression
+
+  92  $$35 :
+
+  93  CallStat : CALL ID OPPAR $$35 CLPAR SCOLON
+
+  94  $$36 :
+
+  95  CallStat : CALL ID OPPAR $$36 ExprList CLPAR SCOLON
+
+  96  $$37 :
+
+  97  ReturnStat : RETURN $$37 SCOLON
+
+  98  $$38 :
+
+  99  ReturnStat : RETURN $$38 Expression SCOLON
+
+ 100  $$39 :
+
+ 101  $$40 :
+
+ 102  $$41 :
+
+ 103  AssignStat : $$39 Variable ASSIGN $$40 Expression SCOLON $$41
+
+ 104  ExprList : Expression
+
+ 105  $$42 :
+
+ 106  ExprList : ExprList COMMA $$42 Expression
+
+ 107  Expression : AuxExpr1
+
+ 108  $$43 :
+
+ 109  Expression : Expression OR $$43 AuxExpr1
+
+ 110  AuxExpr1 : AuxExpr2
+
+ 111  $$44 :
+
+ 112  AuxExpr1 : AuxExpr1 AND $$44 AuxExpr2
+
+ 113  AuxExpr2 : AuxExpr3
+
+ 114  $$45 :
+
+ 115  AuxExpr2 : NOT $$45 AuxExpr3
+
+ 116  AuxExpr3 : AuxExpr4
+
+ 117  $$46 :
+
+ 118  AuxExpr3 : AuxExpr4 RELOP $$46 AuxExpr4
+
+ 119  AuxExpr4 : Term
+
+ 120  $$47 :
+
+ 121  AuxExpr4 : AuxExpr4 ADOP $$47 Term
+
+ 122  Term : Factor
+
+ 123  $$48 :
+
+ 124  Term : Term MULTOP $$48 Factor
+
+ 125  Factor : Variable
+ 126         | INTCT
+ 127         | FLOATCT
+ 128         | CHARCT
+ 129         | TRUE
+ 130         | FALSE
+
+ 131  $$49 :
+
+ 132  Factor : NEG $$49 Factor
+
+ 133  $$50 :
+
+ 134  Factor : OPPAR $$50 Expression CLPAR
+ 135         | FuncCall
+
+ 136  $$51 :
+
+ 137  Variable : ID $$51 SubscrList
+
+ 138  SubscrList :
+ 139             | SubscrList Subscript
+
+ 140  $$52 :
+
+ 141  $$53 :
+
+ 142  Subscript : OPBRAK $$52 AuxExpr4 CLBRAK $$53
+
+ 143  $$54 :
+
+ 144  FuncCall : ID OPPAR $$54 CLPAR
+
+ 145  $$55 :
+
+ 146  FuncCall : ID OPPAR $$55 ExprList CLPAR
+
+state 0
+	$accept : . Prog $end  (0)
+	$$1 : .  (1)
+
+	.  reduce 1
+
+	Prog  goto 1
+	$$1  goto 2
+
+
+state 1
+	$accept : Prog . $end  (0)
+
+	$end  accept
+
+
+state 2
+	Prog : $$1 . PROGRAM ID SCOLON $$2 Decls SubProgs $$3 CompStat  (4)
+
+	PROGRAM  shift 3
+	.  error
+
+
+state 3
+	Prog : $$1 PROGRAM . ID SCOLON $$2 Decls SubProgs $$3 CompStat  (4)
+
+	ID  shift 4
+	.  error
+
+
+state 4
+	Prog : $$1 PROGRAM ID . SCOLON $$2 Decls SubProgs $$3 CompStat  (4)
+
+	SCOLON  shift 5
+	.  error
+
+
+state 5
+	Prog : $$1 PROGRAM ID SCOLON . $$2 Decls SubProgs $$3 CompStat  (4)
+	$$2 : .  (2)
+
+	.  reduce 2
+
+	$$2  goto 6
+
+
+state 6
+	Prog : $$1 PROGRAM ID SCOLON $$2 . Decls SubProgs $$3 CompStat  (4)
+	Decls : .  (5)
+
+	VAR  shift 7
+	FUNCTION  reduce 5
+	PROCEDURE  reduce 5
+	OPBRACE  reduce 5
+
+	Decls  goto 8
+
+
+state 7
+	Decls : VAR . $$4 DeclList  (7)
+	$$4 : .  (6)
+
+	.  reduce 6
+
+	$$4  goto 9
+
+
+state 8
+	Prog : $$1 PROGRAM ID SCOLON $$2 Decls . SubProgs $$3 CompStat  (4)
+	SubProgs : .  (23)
+
+	.  reduce 23
+
+	SubProgs  goto 10
+
+
+state 9
+	Decls : VAR $$4 . DeclList  (7)
+
+	CHAR  shift 11
+	FLOAT  shift 12
+	INT  shift 13
+	LOGIC  shift 14
+	.  error
+
+	DeclList  goto 15
+	Declaration  goto 16
+	Type  goto 17
+
+
+state 10
+	Prog : $$1 PROGRAM ID SCOLON $$2 Decls SubProgs . $$3 CompStat  (4)
+	SubProgs : SubProgs . SubProgDecl  (24)
+	$$3 : .  (3)
+
+	FUNCTION  shift 18
+	PROCEDURE  shift 19
+	OPBRACE  reduce 3
+
+	$$3  goto 20
+	SubProgDecl  goto 21
+	Header  goto 22
+	FuncHeader  goto 23
+	ProcHeader  goto 24
+
+
+state 11
+	Type : CHAR .  (13)
+
+	.  reduce 13
+
+
+state 12
+	Type : FLOAT .  (12)
+
+	.  reduce 12
+
+
+state 13
+	Type : INT .  (11)
+
+	.  reduce 11
+
+
+state 14
+	Type : LOGIC .  (14)
+
+	.  reduce 14
+
+
+state 15
+	Decls : VAR $$4 DeclList .  (7)
+	DeclList : DeclList . Declaration  (9)
+
+	CHAR  shift 11
+	FLOAT  shift 12
+	INT  shift 13
+	LOGIC  shift 14
+	FUNCTION  reduce 7
+	PROCEDURE  reduce 7
+	OPBRACE  reduce 7
+
+	Declaration  goto 25
+	Type  goto 17
+
+
+state 16
+	DeclList : Declaration .  (8)
+
+	.  reduce 8
+
+
+state 17
+	Declaration : Type . ElemList SCOLON  (10)
+
+	ID  shift 26
+	.  error
+
+	ElemList  goto 27
+	Elem  goto 28
+
+
+state 18
+	FuncHeader : FUNCTION . $$7 Type ID OPPAR $$8 FuncHeaderAux  (30)
+	$$7 : .  (28)
+
+	.  reduce 28
+
+	$$7  goto 29
+
+
+state 19
+	ProcHeader : PROCEDURE . ID OPPAR $$9 CLPAR SCOLON  (34)
+	ProcHeader : PROCEDURE . ID OPPAR $$10 ParamList CLPAR SCOLON  (36)
+
+	ID  shift 30
+	.  error
+
+
+state 20
+	Prog : $$1 PROGRAM ID SCOLON $$2 Decls SubProgs $$3 . CompStat  (4)
+
+	OPBRACE  shift 31
+	.  error
+
+	CompStat  goto 32
+
+
+state 21
+	SubProgs : SubProgs SubProgDecl .  (24)
+
+	.  reduce 24
+
+
+state 22
+	SubProgDecl : Header . Decls CompStat  (25)
+	Decls : .  (5)
+
+	VAR  shift 7
+	OPBRACE  reduce 5
+
+	Decls  goto 33
+
+
+state 23
+	Header : FuncHeader .  (26)
+
+	.  reduce 26
+
+
+state 24
+	Header : ProcHeader .  (27)
+
+	.  reduce 27
+
+
+state 25
+	DeclList : DeclList Declaration .  (9)
+
+	.  reduce 9
+
+
+state 26
+	Elem : ID . $$6 DimList  (19)
+	$$6 : .  (18)
+
+	.  reduce 18
+
+	$$6  goto 34
+
+
+state 27
+	Declaration : Type ElemList . SCOLON  (10)
+	ElemList : ElemList . COMMA $$5 Elem  (17)
+
+	SCOLON  shift 35
+	COMMA  shift 36
+	.  error
+
+
+state 28
+	ElemList : Elem .  (15)
+
+	.  reduce 15
+
+
+state 29
+	FuncHeader : FUNCTION $$7 . Type ID OPPAR $$8 FuncHeaderAux  (30)
+
+	CHAR  shift 11
+	FLOAT  shift 12
+	INT  shift 13
+	LOGIC  shift 14
+	.  error
+
+	Type  goto 37
+
+
+state 30
+	ProcHeader : PROCEDURE ID . OPPAR $$9 CLPAR SCOLON  (34)
+	ProcHeader : PROCEDURE ID . OPPAR $$10 ParamList CLPAR SCOLON  (36)
+
+	OPPAR  shift 38
+	.  error
+
+
+state 31
+	CompStat : OPBRACE . $$12 StatList CLBRACE  (42)
+	$$12 : .  (41)
+
+	.  reduce 41
+
+	$$12  goto 39
+
+
+state 32
+	Prog : $$1 PROGRAM ID SCOLON $$2 Decls SubProgs $$3 CompStat .  (4)
+
+	.  reduce 4
+
+
+state 33
+	SubProgDecl : Header Decls . CompStat  (25)
+
+	OPBRACE  shift 31
+	.  error
+
+	CompStat  goto 40
+
+
+state 34
+	Elem : ID $$6 . DimList  (19)
+	DimList : .  (20)
+
+	.  reduce 20
+
+	DimList  goto 41
+
+
+state 35
+	Declaration : Type ElemList SCOLON .  (10)
+
+	.  reduce 10
+
+
+state 36
+	ElemList : ElemList COMMA . $$5 Elem  (17)
+	$$5 : .  (16)
+
+	.  reduce 16
+
+	$$5  goto 42
+
+
+state 37
+	FuncHeader : FUNCTION $$7 Type . ID OPPAR $$8 FuncHeaderAux  (30)
+
+	ID  shift 43
+	.  error
+
+
+state 38
+	ProcHeader : PROCEDURE ID OPPAR . $$9 CLPAR SCOLON  (34)
+	ProcHeader : PROCEDURE ID OPPAR . $$10 ParamList CLPAR SCOLON  (36)
+	$$9 : .  (33)
+	$$10 : .  (35)
+
+	CHAR  reduce 35
+	FLOAT  reduce 35
+	INT  reduce 35
+	LOGIC  reduce 35
+	CLPAR  reduce 33
+
+	$$9  goto 44
+	$$10  goto 45
+
+
+state 39
+	CompStat : OPBRACE $$12 . StatList CLBRACE  (42)
+	StatList : .  (43)
+
+	.  reduce 43
+
+	StatList  goto 46
+
+
+state 40
+	SubProgDecl : Header Decls CompStat .  (25)
+
+	.  reduce 25
+
+
+state 41
+	Elem : ID $$6 DimList .  (19)
+	DimList : DimList . Dim  (21)
+
+	OPBRAK  shift 47
+	SCOLON  reduce 19
+	COMMA  reduce 19
+
+	Dim  goto 48
+
+
+state 42
+	ElemList : ElemList COMMA $$5 . Elem  (17)
+
+	ID  shift 26
+	.  error
+
+	Elem  goto 49
+
+
+state 43
+	FuncHeader : FUNCTION $$7 Type ID . OPPAR $$8 FuncHeaderAux  (30)
+
+	OPPAR  shift 50
+	.  error
+
+
+state 44
+	ProcHeader : PROCEDURE ID OPPAR $$9 . CLPAR SCOLON  (34)
+
+	CLPAR  shift 51
+	.  error
+
+
+state 45
+	ProcHeader : PROCEDURE ID OPPAR $$10 . ParamList CLPAR SCOLON  (36)
+
+	CHAR  shift 11
+	FLOAT  shift 12
+	INT  shift 13
+	LOGIC  shift 14
+	.  error
+
+	Type  goto 52
+	ParamList  goto 53
+	Parameter  goto 54
+
+
+state 46
+	CompStat : OPBRACE $$12 StatList . CLBRACE  (42)
+	StatList : StatList . Statement  (44)
+	$$39 : .  (100)
+
+	CALL  shift 55
+	FOR  shift 56
+	IF  shift 57
+	READ  shift 58
+	REPEAT  shift 59
+	RETURN  shift 60
+	WHILE  shift 61
+	WRITE  shift 62
+	OPBRACE  shift 31
+	CLBRACE  shift 63
+	SCOLON  shift 64
+	ID  reduce 100
+
+	CompStat  goto 65
+	Statement  goto 66
+	IfStat  goto 67
+	WhileStat  goto 68
+	RepeatStat  goto 69
+	ForStat  goto 70
+	ReadStat  goto 71
+	WriteStat  goto 72
+	AssignStat  goto 73
+	CallStat  goto 74
+	ReturnStat  goto 75
+	$$39  goto 76
+
+
+state 47
+	Dim : OPBRAK . INTCT CLBRAK  (22)
+
+	INTCT  shift 77
+	.  error
+
+
+state 48
+	DimList : DimList Dim .  (21)
+
+	.  reduce 21
+
+
+state 49
+	ElemList : ElemList COMMA $$5 Elem .  (17)
+
+	.  reduce 17
+
+
+state 50
+	FuncHeader : FUNCTION $$7 Type ID OPPAR . $$8 FuncHeaderAux  (30)
+	$$8 : .  (29)
+
+	.  reduce 29
+
+	$$8  goto 78
+
+
+state 51
+	ProcHeader : PROCEDURE ID OPPAR $$9 CLPAR . SCOLON  (34)
+
+	SCOLON  shift 79
+	.  error
+
+
+state 52
+	Parameter : Type . ID  (40)
+
+	ID  shift 80
+	.  error
+
+
+state 53
+	ProcHeader : PROCEDURE ID OPPAR $$10 ParamList . CLPAR SCOLON  (36)
+	ParamList : ParamList . COMMA $$11 Parameter  (39)
+
+	CLPAR  shift 81
+	COMMA  shift 82
+	.  error
+
+
+state 54
+	ParamList : Parameter .  (37)
+
+	.  reduce 37
+
+
+state 55
+	CallStat : CALL . ID OPPAR $$35 CLPAR SCOLON  (93)
+	CallStat : CALL . ID OPPAR $$36 ExprList CLPAR SCOLON  (95)
+
+	ID  shift 83
+	.  error
+
+
+state 56
+	ForStat : FOR . OPPAR $$23 Variable ASSIGN $$24 Expression SCOLON $$25 Expression SCOLON $$26 Variable ASSIGN $$27 Expression CLPAR $$28 Statement  (77)
+
+	OPPAR  shift 84
+	.  error
+
+
+state 57
+	IfStat : IF . OPPAR $$13 Expression CLPAR $$14 Statement $$15 ElseStat  (59)
+
+	OPPAR  shift 85
+	.  error
+
+
+state 58
+	ReadStat : READ . OPPAR $$29 ReadList $$30 CLPAR SCOLON  (80)
+
+	OPPAR  shift 86
+	.  error
+
+
+state 59
+	RepeatStat : REPEAT . $$20 Statement WHILE OPPAR $$21 Expression CLPAR SCOLON $$22  (70)
+	$$20 : .  (67)
+
+	.  reduce 67
+
+	$$20  goto 87
+
+
+state 60
+	ReturnStat : RETURN . $$37 SCOLON  (97)
+	ReturnStat : RETURN . $$38 Expression SCOLON  (99)
+	$$37 : .  (96)
+	$$38 : .  (98)
+
+	FALSE  reduce 98
+	TRUE  reduce 98
+	ID  reduce 98
+	INTCT  reduce 98
+	CHARCT  reduce 98
+	FLOATCT  reduce 98
+	NOT  reduce 98
+	NEG  reduce 98
+	OPPAR  reduce 98
+	SCOLON  reduce 96
+
+	$$37  goto 88
+	$$38  goto 89
+
+
+state 61
+	WhileStat : WHILE . OPPAR $$17 Expression CLPAR $$18 $$19 Statement  (66)
+
+	OPPAR  shift 90
+	.  error
+
+
+state 62
+	WriteStat : WRITE . OPPAR $$32 WriteList $$33 CLPAR SCOLON  (86)
+
+	OPPAR  shift 91
+	.  error
+
+
+state 63
+	CompStat : OPBRACE $$12 StatList CLBRACE .  (42)
+
+	.  reduce 42
+
+
+state 64
+	Statement : SCOLON .  (55)
+
+	.  reduce 55
+
+
+state 65
+	Statement : CompStat .  (45)
+
+	.  reduce 45
+
+
+state 66
+	StatList : StatList Statement .  (44)
+
+	.  reduce 44
+
+
+state 67
+	Statement : IfStat .  (46)
+
+	.  reduce 46
+
+
+state 68
+	Statement : WhileStat .  (47)
+
+	.  reduce 47
+
+
+state 69
+	Statement : RepeatStat .  (48)
+
+	.  reduce 48
+
+
+state 70
+	Statement : ForStat .  (49)
+
+	.  reduce 49
+
+
+state 71
+	Statement : ReadStat .  (50)
+
+	.  reduce 50
+
+
+state 72
+	Statement : WriteStat .  (51)
+
+	.  reduce 51
+
+
+state 73
+	Statement : AssignStat .  (52)
+
+	.  reduce 52
+
+
+state 74
+	Statement : CallStat .  (53)
+
+	.  reduce 53
+
+
+state 75
+	Statement : ReturnStat .  (54)
+
+	.  reduce 54
+
+
+state 76
+	AssignStat : $$39 . Variable ASSIGN $$40 Expression SCOLON $$41  (103)
+
+	ID  shift 92
+	.  error
+
+	Variable  goto 93
+
+
+state 77
+	Dim : OPBRAK INTCT . CLBRAK  (22)
+
+	CLBRAK  shift 94
+	.  error
+
+
+state 78
+	FuncHeader : FUNCTION $$7 Type ID OPPAR $$8 . FuncHeaderAux  (30)
+
+	CHAR  shift 11
+	FLOAT  shift 12
+	INT  shift 13
+	LOGIC  shift 14
+	CLPAR  shift 95
+	.  error
+
+	Type  goto 52
+	FuncHeaderAux  goto 96
+	ParamList  goto 97
+	Parameter  goto 54
+
+
+state 79
+	ProcHeader : PROCEDURE ID OPPAR $$9 CLPAR SCOLON .  (34)
+
+	.  reduce 34
+
+
+state 80
+	Parameter : Type ID .  (40)
+
+	.  reduce 40
+
+
+state 81
+	ProcHeader : PROCEDURE ID OPPAR $$10 ParamList CLPAR . SCOLON  (36)
+
+	SCOLON  shift 98
+	.  error
+
+
+state 82
+	ParamList : ParamList COMMA . $$11 Parameter  (39)
+	$$11 : .  (38)
+
+	.  reduce 38
+
+	$$11  goto 99
+
+
+state 83
+	CallStat : CALL ID . OPPAR $$35 CLPAR SCOLON  (93)
+	CallStat : CALL ID . OPPAR $$36 ExprList CLPAR SCOLON  (95)
+
+	OPPAR  shift 100
+	.  error
+
+
+state 84
+	ForStat : FOR OPPAR . $$23 Variable ASSIGN $$24 Expression SCOLON $$25 Expression SCOLON $$26 Variable ASSIGN $$27 Expression CLPAR $$28 Statement  (77)
+	$$23 : .  (71)
+
+	.  reduce 71
+
+	$$23  goto 101
+
+
+state 85
+	IfStat : IF OPPAR . $$13 Expression CLPAR $$14 Statement $$15 ElseStat  (59)
+	$$13 : .  (56)
+
+	.  reduce 56
+
+	$$13  goto 102
+
+
+state 86
+	ReadStat : READ OPPAR . $$29 ReadList $$30 CLPAR SCOLON  (80)
+	$$29 : .  (78)
+
+	.  reduce 78
+
+	$$29  goto 103
+
+
+state 87
+	RepeatStat : REPEAT $$20 . Statement WHILE OPPAR $$21 Expression CLPAR SCOLON $$22  (70)
+	$$39 : .  (100)
+
+	CALL  shift 55
+	FOR  shift 56
+	IF  shift 57
+	READ  shift 58
+	REPEAT  shift 59
+	RETURN  shift 60
+	WHILE  shift 61
+	WRITE  shift 62
+	OPBRACE  shift 31
+	SCOLON  shift 64
+	ID  reduce 100
+
+	CompStat  goto 65
+	Statement  goto 104
+	IfStat  goto 67
+	WhileStat  goto 68
+	RepeatStat  goto 69
+	ForStat  goto 70
+	ReadStat  goto 71
+	WriteStat  goto 72
+	AssignStat  goto 73
+	CallStat  goto 74
+	ReturnStat  goto 75
+	$$39  goto 76
+
+
+state 88
+	ReturnStat : RETURN $$37 . SCOLON  (97)
+
+	SCOLON  shift 105
+	.  error
+
+
+state 89
+	ReturnStat : RETURN $$38 . Expression SCOLON  (99)
+
+	FALSE  shift 106
+	TRUE  shift 107
+	ID  shift 108
+	INTCT  shift 109
+	CHARCT  shift 110
+	FLOATCT  shift 111
+	NOT  shift 112
+	NEG  shift 113
+	OPPAR  shift 114
+	.  error
+
+	Variable  goto 115
+	FuncCall  goto 116
+	Expression  goto 117
+	AuxExpr1  goto 118
+	AuxExpr2  goto 119
+	AuxExpr3  goto 120
+	AuxExpr4  goto 121
+	Term  goto 122
+	Factor  goto 123
+
+
+state 90
+	WhileStat : WHILE OPPAR . $$17 Expression CLPAR $$18 $$19 Statement  (66)
+	$$17 : .  (63)
+
+	.  reduce 63
+
+	$$17  goto 124
+
+
+state 91
+	WriteStat : WRITE OPPAR . $$32 WriteList $$33 CLPAR SCOLON  (86)
+	$$32 : .  (84)
+
+	.  reduce 84
+
+	$$32  goto 125
+
+
+state 92
+	Variable : ID . $$51 SubscrList  (137)
+	$$51 : .  (136)
+
+	.  reduce 136
+
+	$$51  goto 126
+
+
+state 93
+	AssignStat : $$39 Variable . ASSIGN $$40 Expression SCOLON $$41  (103)
+
+	ASSIGN  shift 127
+	.  error
+
+
+state 94
+	Dim : OPBRAK INTCT CLBRAK .  (22)
+
+	.  reduce 22
+
+
+state 95
+	FuncHeaderAux : CLPAR . SCOLON  (31)
+
+	SCOLON  shift 128
+	.  error
+
+
+state 96
+	FuncHeader : FUNCTION $$7 Type ID OPPAR $$8 FuncHeaderAux .  (30)
+
+	.  reduce 30
+
+
+state 97
+	FuncHeaderAux : ParamList . CLPAR SCOLON  (32)
+	ParamList : ParamList . COMMA $$11 Parameter  (39)
+
+	CLPAR  shift 129
+	COMMA  shift 82
+	.  error
+
+
+state 98
+	ProcHeader : PROCEDURE ID OPPAR $$10 ParamList CLPAR SCOLON .  (36)
+
+	.  reduce 36
+
+
+state 99
+	ParamList : ParamList COMMA $$11 . Parameter  (39)
+
+	CHAR  shift 11
+	FLOAT  shift 12
+	INT  shift 13
+	LOGIC  shift 14
+	.  error
+
+	Type  goto 52
+	Parameter  goto 130
+
+
+state 100
+	CallStat : CALL ID OPPAR . $$35 CLPAR SCOLON  (93)
+	CallStat : CALL ID OPPAR . $$36 ExprList CLPAR SCOLON  (95)
+	$$35 : .  (92)
+	$$36 : .  (94)
+
+	FALSE  reduce 94
+	TRUE  reduce 94
+	ID  reduce 94
+	INTCT  reduce 94
+	CHARCT  reduce 94
+	FLOATCT  reduce 94
+	NOT  reduce 94
+	NEG  reduce 94
+	OPPAR  reduce 94
+	CLPAR  reduce 92
+
+	$$35  goto 131
+	$$36  goto 132
+
+
+state 101
+	ForStat : FOR OPPAR $$23 . Variable ASSIGN $$24 Expression SCOLON $$25 Expression SCOLON $$26 Variable ASSIGN $$27 Expression CLPAR $$28 Statement  (77)
+
+	ID  shift 92
+	.  error
+
+	Variable  goto 133
+
+
+state 102
+	IfStat : IF OPPAR $$13 . Expression CLPAR $$14 Statement $$15 ElseStat  (59)
+
+	FALSE  shift 106
+	TRUE  shift 107
+	ID  shift 108
+	INTCT  shift 109
+	CHARCT  shift 110
+	FLOATCT  shift 111
+	NOT  shift 112
+	NEG  shift 113
+	OPPAR  shift 114
+	.  error
+
+	Variable  goto 115
+	FuncCall  goto 116
+	Expression  goto 134
+	AuxExpr1  goto 118
+	AuxExpr2  goto 119
+	AuxExpr3  goto 120
+	AuxExpr4  goto 121
+	Term  goto 122
+	Factor  goto 123
+
+
+state 103
+	ReadStat : READ OPPAR $$29 . ReadList $$30 CLPAR SCOLON  (80)
+
+	ID  shift 92
+	.  error
+
+	Variable  goto 135
+	ReadList  goto 136
+
+
+state 104
+	RepeatStat : REPEAT $$20 Statement . WHILE OPPAR $$21 Expression CLPAR SCOLON $$22  (70)
+
+	WHILE  shift 137
+	.  error
+
+
+state 105
+	ReturnStat : RETURN $$37 SCOLON .  (97)
+
+	.  reduce 97
+
+
+state 106
+	Factor : FALSE .  (130)
+
+	.  reduce 130
+
+
+state 107
+	Factor : TRUE .  (129)
+
+	.  reduce 129
+
+
+state 108
+	Variable : ID . $$51 SubscrList  (137)
+	FuncCall : ID . OPPAR $$54 CLPAR  (144)
+	FuncCall : ID . OPPAR $$55 ExprList CLPAR  (146)
+	$$51 : .  (136)
+
+	OPPAR  shift 138
+	OR  reduce 136
+	AND  reduce 136
+	RELOP  reduce 136
+	ADOP  reduce 136
+	MULTOP  reduce 136
+	CLPAR  reduce 136
+	OPBRAK  reduce 136
+	CLBRAK  reduce 136
+	SCOLON  reduce 136
+	COMMA  reduce 136
+
+	$$51  goto 126
+
+
+state 109
+	Factor : INTCT .  (126)
+
+	.  reduce 126
+
+
+state 110
+	Factor : CHARCT .  (128)
+
+	.  reduce 128
+
+
+state 111
+	Factor : FLOATCT .  (127)
+
+	.  reduce 127
+
+
+state 112
+	AuxExpr2 : NOT . $$45 AuxExpr3  (115)
+	$$45 : .  (114)
+
+	.  reduce 114
+
+	$$45  goto 139
+
+
+state 113
+	Factor : NEG . $$49 Factor  (132)
+	$$49 : .  (131)
+
+	.  reduce 131
+
+	$$49  goto 140
+
+
+state 114
+	Factor : OPPAR . $$50 Expression CLPAR  (134)
+	$$50 : .  (133)
+
+	.  reduce 133
+
+	$$50  goto 141
+
+
+state 115
+	Factor : Variable .  (125)
+
+	.  reduce 125
+
+
+state 116
+	Factor : FuncCall .  (135)
+
+	.  reduce 135
+
+
+state 117
+	ReturnStat : RETURN $$38 Expression . SCOLON  (99)
+	Expression : Expression . OR $$43 AuxExpr1  (109)
+
+	OR  shift 142
+	SCOLON  shift 143
+	.  error
+
+
+state 118
+	Expression : AuxExpr1 .  (107)
+	AuxExpr1 : AuxExpr1 . AND $$44 AuxExpr2  (112)
+
+	AND  shift 144
+	OR  reduce 107
+	CLPAR  reduce 107
+	SCOLON  reduce 107
+	COMMA  reduce 107
+
+
+state 119
+	AuxExpr1 : AuxExpr2 .  (110)
+
+	.  reduce 110
+
+
+state 120
+	AuxExpr2 : AuxExpr3 .  (113)
+
+	.  reduce 113
+
+
+state 121
+	AuxExpr3 : AuxExpr4 .  (116)
+	AuxExpr3 : AuxExpr4 . RELOP $$46 AuxExpr4  (118)
+	AuxExpr4 : AuxExpr4 . ADOP $$47 Term  (121)
+
+	RELOP  shift 145
+	ADOP  shift 146
+	OR  reduce 116
+	AND  reduce 116
+	CLPAR  reduce 116
+	SCOLON  reduce 116
+	COMMA  reduce 116
+
+
+state 122
+	AuxExpr4 : Term .  (119)
+	Term : Term . MULTOP $$48 Factor  (124)
+
+	MULTOP  shift 147
+	OR  reduce 119
+	AND  reduce 119
+	RELOP  reduce 119
+	ADOP  reduce 119
+	CLPAR  reduce 119
+	CLBRAK  reduce 119
+	SCOLON  reduce 119
+	COMMA  reduce 119
+
+
+state 123
+	Term : Factor .  (122)
+
+	.  reduce 122
+
+
+state 124
+	WhileStat : WHILE OPPAR $$17 . Expression CLPAR $$18 $$19 Statement  (66)
+
+	FALSE  shift 106
+	TRUE  shift 107
+	ID  shift 108
+	INTCT  shift 109
+	CHARCT  shift 110
+	FLOATCT  shift 111
+	NOT  shift 112
+	NEG  shift 113
+	OPPAR  shift 114
+	.  error
+
+	Variable  goto 115
+	FuncCall  goto 116
+	Expression  goto 148
+	AuxExpr1  goto 118
+	AuxExpr2  goto 119
+	AuxExpr3  goto 120
+	AuxExpr4  goto 121
+	Term  goto 122
+	Factor  goto 123
+
+
+state 125
+	WriteStat : WRITE OPPAR $$32 . WriteList $$33 CLPAR SCOLON  (86)
+
+	FALSE  shift 106
+	TRUE  shift 107
+	ID  shift 108
+	INTCT  shift 109
+	CHARCT  shift 110
+	FLOATCT  shift 111
+	STRING  shift 149
+	NOT  shift 112
+	NEG  shift 113
+	OPPAR  shift 114
+	.  error
+
+	Variable  goto 115
+	FuncCall  goto 116
+	Expression  goto 150
+	AuxExpr1  goto 118
+	AuxExpr2  goto 119
+	AuxExpr3  goto 120
+	AuxExpr4  goto 121
+	Term  goto 122
+	Factor  goto 123
+	WriteElem  goto 151
+	WriteList  goto 152
+
+
+state 126
+	Variable : ID $$51 . SubscrList  (137)
+	SubscrList : .  (138)
+
+	.  reduce 138
+
+	SubscrList  goto 153
+
+
+state 127
+	AssignStat : $$39 Variable ASSIGN . $$40 Expression SCOLON $$41  (103)
+	$$40 : .  (101)
+
+	.  reduce 101
+
+	$$40  goto 154
+
+
+state 128
+	FuncHeaderAux : CLPAR SCOLON .  (31)
+
+	.  reduce 31
+
+
+state 129
+	FuncHeaderAux : ParamList CLPAR . SCOLON  (32)
+
+	SCOLON  shift 155
+	.  error
+
+
+state 130
+	ParamList : ParamList COMMA $$11 Parameter .  (39)
+
+	.  reduce 39
+
+
+state 131
+	CallStat : CALL ID OPPAR $$35 . CLPAR SCOLON  (93)
+
+	CLPAR  shift 156
+	.  error
+
+
+state 132
+	CallStat : CALL ID OPPAR $$36 . ExprList CLPAR SCOLON  (95)
+
+	FALSE  shift 106
+	TRUE  shift 107
+	ID  shift 108
+	INTCT  shift 109
+	CHARCT  shift 110
+	FLOATCT  shift 111
+	NOT  shift 112
+	NEG  shift 113
+	OPPAR  shift 114
+	.  error
+
+	Variable  goto 115
+	FuncCall  goto 116
+	Expression  goto 157
+	AuxExpr1  goto 118
+	AuxExpr2  goto 119
+	AuxExpr3  goto 120
+	AuxExpr4  goto 121
+	Term  goto 122
+	Factor  goto 123
+	ExprList  goto 158
+
+
+state 133
+	ForStat : FOR OPPAR $$23 Variable . ASSIGN $$24 Expression SCOLON $$25 Expression SCOLON $$26 Variable ASSIGN $$27 Expression CLPAR $$28 Statement  (77)
+
+	ASSIGN  shift 159
+	.  error
+
+
+state 134
+	IfStat : IF OPPAR $$13 Expression . CLPAR $$14 Statement $$15 ElseStat  (59)
+	Expression : Expression . OR $$43 AuxExpr1  (109)
+
+	OR  shift 142
+	CLPAR  shift 160
+	.  error
+
+
+state 135
+	ReadList : Variable .  (81)
+
+	.  reduce 81
+
+
+state 136
+	ReadStat : READ OPPAR $$29 ReadList . $$30 CLPAR SCOLON  (80)
+	ReadList : ReadList . COMMA $$31 Variable  (83)
+	$$30 : .  (79)
+
+	COMMA  shift 161
+	CLPAR  reduce 79
+
+	$$30  goto 162
+
+
+state 137
+	RepeatStat : REPEAT $$20 Statement WHILE . OPPAR $$21 Expression CLPAR SCOLON $$22  (70)
+
+	OPPAR  shift 163
+	.  error
+
+
+state 138
+	FuncCall : ID OPPAR . $$54 CLPAR  (144)
+	FuncCall : ID OPPAR . $$55 ExprList CLPAR  (146)
+	$$54 : .  (143)
+	$$55 : .  (145)
+
+	FALSE  reduce 145
+	TRUE  reduce 145
+	ID  reduce 145
+	INTCT  reduce 145
+	CHARCT  reduce 145
+	FLOATCT  reduce 145
+	NOT  reduce 145
+	NEG  reduce 145
+	OPPAR  reduce 145
+	CLPAR  reduce 143
+
+	$$54  goto 164
+	$$55  goto 165
+
+
+state 139
+	AuxExpr2 : NOT $$45 . AuxExpr3  (115)
+
+	FALSE  shift 106
+	TRUE  shift 107
+	ID  shift 108
+	INTCT  shift 109
+	CHARCT  shift 110
+	FLOATCT  shift 111
+	NEG  shift 113
+	OPPAR  shift 114
+	.  error
+
+	Variable  goto 115
+	FuncCall  goto 116
+	AuxExpr3  goto 166
+	AuxExpr4  goto 121
+	Term  goto 122
+	Factor  goto 123
+
+
+state 140
+	Factor : NEG $$49 . Factor  (132)
+
+	FALSE  shift 106
+	TRUE  shift 107
+	ID  shift 108
+	INTCT  shift 109
+	CHARCT  shift 110
+	FLOATCT  shift 111
+	NEG  shift 113
+	OPPAR  shift 114
+	.  error
+
+	Variable  goto 115
+	FuncCall  goto 116
+	Factor  goto 167
+
+
+state 141
+	Factor : OPPAR $$50 . Expression CLPAR  (134)
+
+	FALSE  shift 106
+	TRUE  shift 107
+	ID  shift 108
+	INTCT  shift 109
+	CHARCT  shift 110
+	FLOATCT  shift 111
+	NOT  shift 112
+	NEG  shift 113
+	OPPAR  shift 114
+	.  error
+
+	Variable  goto 115
+	FuncCall  goto 116
+	Expression  goto 168
+	AuxExpr1  goto 118
+	AuxExpr2  goto 119
+	AuxExpr3  goto 120
+	AuxExpr4  goto 121
+	Term  goto 122
+	Factor  goto 123
+
+
+state 142
+	Expression : Expression OR . $$43 AuxExpr1  (109)
+	$$43 : .  (108)
+
+	.  reduce 108
+
+	$$43  goto 169
+
+
+state 143
+	ReturnStat : RETURN $$38 Expression SCOLON .  (99)
+
+	.  reduce 99
+
+
+state 144
+	AuxExpr1 : AuxExpr1 AND . $$44 AuxExpr2  (112)
+	$$44 : .  (111)
+
+	.  reduce 111
+
+	$$44  goto 170
+
+
+state 145
+	AuxExpr3 : AuxExpr4 RELOP . $$46 AuxExpr4  (118)
+	$$46 : .  (117)
+
+	.  reduce 117
+
+	$$46  goto 171
+
+
+state 146
+	AuxExpr4 : AuxExpr4 ADOP . $$47 Term  (121)
+	$$47 : .  (120)
+
+	.  reduce 120
+
+	$$47  goto 172
+
+
+state 147
+	Term : Term MULTOP . $$48 Factor  (124)
+	$$48 : .  (123)
+
+	.  reduce 123
+
+	$$48  goto 173
+
+
+state 148
+	WhileStat : WHILE OPPAR $$17 Expression . CLPAR $$18 $$19 Statement  (66)
+	Expression : Expression . OR $$43 AuxExpr1  (109)
+
+	OR  shift 142
+	CLPAR  shift 174
+	.  error
+
+
+state 149
+	WriteElem : STRING .  (90)
+
+	.  reduce 90
+
+
+state 150
+	WriteElem : Expression .  (91)
+	Expression : Expression . OR $$43 AuxExpr1  (109)
+
+	OR  shift 142
+	CLPAR  reduce 91
+	COMMA  reduce 91
+
+
+state 151
+	WriteList : WriteElem .  (87)
+
+	.  reduce 87
+
+
+state 152
+	WriteStat : WRITE OPPAR $$32 WriteList . $$33 CLPAR SCOLON  (86)
+	WriteList : WriteList . COMMA $$34 WriteElem  (89)
+	$$33 : .  (85)
+
+	COMMA  shift 175
+	CLPAR  reduce 85
+
+	$$33  goto 176
+
+
+state 153
+	Variable : ID $$51 SubscrList .  (137)
+	SubscrList : SubscrList . Subscript  (139)
+
+	OPBRAK  shift 177
+	OR  reduce 137
+	AND  reduce 137
+	RELOP  reduce 137
+	ADOP  reduce 137
+	MULTOP  reduce 137
+	CLPAR  reduce 137
+	CLBRAK  reduce 137
+	SCOLON  reduce 137
+	COMMA  reduce 137
+	ASSIGN  reduce 137
+
+	Subscript  goto 178
+
+
+state 154
+	AssignStat : $$39 Variable ASSIGN $$40 . Expression SCOLON $$41  (103)
+
+	FALSE  shift 106
+	TRUE  shift 107
+	ID  shift 108
+	INTCT  shift 109
+	CHARCT  shift 110
+	FLOATCT  shift 111
+	NOT  shift 112
+	NEG  shift 113
+	OPPAR  shift 114
+	.  error
+
+	Variable  goto 115
+	FuncCall  goto 116
+	Expression  goto 179
+	AuxExpr1  goto 118
+	AuxExpr2  goto 119
+	AuxExpr3  goto 120
+	AuxExpr4  goto 121
+	Term  goto 122
+	Factor  goto 123
+
+
+state 155
+	FuncHeaderAux : ParamList CLPAR SCOLON .  (32)
+
+	.  reduce 32
+
+
+state 156
+	CallStat : CALL ID OPPAR $$35 CLPAR . SCOLON  (93)
+
+	SCOLON  shift 180
+	.  error
+
+
+state 157
+	ExprList : Expression .  (104)
+	Expression : Expression . OR $$43 AuxExpr1  (109)
+
+	OR  shift 142
+	CLPAR  reduce 104
+	COMMA  reduce 104
+
+
+state 158
+	CallStat : CALL ID OPPAR $$36 ExprList . CLPAR SCOLON  (95)
+	ExprList : ExprList . COMMA $$42 Expression  (106)
+
+	CLPAR  shift 181
+	COMMA  shift 182
+	.  error
+
+
+state 159
+	ForStat : FOR OPPAR $$23 Variable ASSIGN . $$24 Expression SCOLON $$25 Expression SCOLON $$26 Variable ASSIGN $$27 Expression CLPAR $$28 Statement  (77)
+	$$24 : .  (72)
+
+	.  reduce 72
+
+	$$24  goto 183
+
+
+state 160
+	IfStat : IF OPPAR $$13 Expression CLPAR . $$14 Statement $$15 ElseStat  (59)
+	$$14 : .  (57)
+
+	.  reduce 57
+
+	$$14  goto 184
+
+
+state 161
+	ReadList : ReadList COMMA . $$31 Variable  (83)
+	$$31 : .  (82)
+
+	.  reduce 82
+
+	$$31  goto 185
+
+
+state 162
+	ReadStat : READ OPPAR $$29 ReadList $$30 . CLPAR SCOLON  (80)
+
+	CLPAR  shift 186
+	.  error
+
+
+state 163
+	RepeatStat : REPEAT $$20 Statement WHILE OPPAR . $$21 Expression CLPAR SCOLON $$22  (70)
+	$$21 : .  (68)
+
+	.  reduce 68
+
+	$$21  goto 187
+
+
+state 164
+	FuncCall : ID OPPAR $$54 . CLPAR  (144)
+
+	CLPAR  shift 188
+	.  error
+
+
+state 165
+	FuncCall : ID OPPAR $$55 . ExprList CLPAR  (146)
+
+	FALSE  shift 106
+	TRUE  shift 107
+	ID  shift 108
+	INTCT  shift 109
+	CHARCT  shift 110
+	FLOATCT  shift 111
+	NOT  shift 112
+	NEG  shift 113
+	OPPAR  shift 114
+	.  error
+
+	Variable  goto 115
+	FuncCall  goto 116
+	Expression  goto 157
+	AuxExpr1  goto 118
+	AuxExpr2  goto 119
+	AuxExpr3  goto 120
+	AuxExpr4  goto 121
+	Term  goto 122
+	Factor  goto 123
+	ExprList  goto 189
+
+
+state 166
+	AuxExpr2 : NOT $$45 AuxExpr3 .  (115)
+
+	.  reduce 115
+
+
+state 167
+	Factor : NEG $$49 Factor .  (132)
+
+	.  reduce 132
+
+
+state 168
+	Expression : Expression . OR $$43 AuxExpr1  (109)
+	Factor : OPPAR $$50 Expression . CLPAR  (134)
+
+	OR  shift 142
+	CLPAR  shift 190
+	.  error
+
+
+state 169
+	Expression : Expression OR $$43 . AuxExpr1  (109)
+
+	FALSE  shift 106
+	TRUE  shift 107
+	ID  shift 108
+	INTCT  shift 109
+	CHARCT  shift 110
+	FLOATCT  shift 111
+	NOT  shift 112
+	NEG  shift 113
+	OPPAR  shift 114
+	.  error
+
+	Variable  goto 115
+	FuncCall  goto 116
+	AuxExpr1  goto 191
+	AuxExpr2  goto 119
+	AuxExpr3  goto 120
+	AuxExpr4  goto 121
+	Term  goto 122
+	Factor  goto 123
+
+
+state 170
+	AuxExpr1 : AuxExpr1 AND $$44 . AuxExpr2  (112)
+
+	FALSE  shift 106
+	TRUE  shift 107
+	ID  shift 108
+	INTCT  shift 109
+	CHARCT  shift 110
+	FLOATCT  shift 111
+	NOT  shift 112
+	NEG  shift 113
+	OPPAR  shift 114
+	.  error
+
+	Variable  goto 115
+	FuncCall  goto 116
+	AuxExpr2  goto 192
+	AuxExpr3  goto 120
+	AuxExpr4  goto 121
+	Term  goto 122
+	Factor  goto 123
+
+
+state 171
+	AuxExpr3 : AuxExpr4 RELOP $$46 . AuxExpr4  (118)
+
+	FALSE  shift 106
+	TRUE  shift 107
+	ID  shift 108
+	INTCT  shift 109
+	CHARCT  shift 110
+	FLOATCT  shift 111
+	NEG  shift 113
+	OPPAR  shift 114
+	.  error
+
+	Variable  goto 115
+	FuncCall  goto 116
+	AuxExpr4  goto 193
+	Term  goto 122
+	Factor  goto 123
+
+
+state 172
+	AuxExpr4 : AuxExpr4 ADOP $$47 . Term  (121)
+
+	FALSE  shift 106
+	TRUE  shift 107
+	ID  shift 108
+	INTCT  shift 109
+	CHARCT  shift 110
+	FLOATCT  shift 111
+	NEG  shift 113
+	OPPAR  shift 114
+	.  error
+
+	Variable  goto 115
+	FuncCall  goto 116
+	Term  goto 194
+	Factor  goto 123
+
+
+state 173
+	Term : Term MULTOP $$48 . Factor  (124)
+
+	FALSE  shift 106
+	TRUE  shift 107
+	ID  shift 108
+	INTCT  shift 109
+	CHARCT  shift 110
+	FLOATCT  shift 111
+	NEG  shift 113
+	OPPAR  shift 114
+	.  error
+
+	Variable  goto 115
+	FuncCall  goto 116
+	Factor  goto 195
+
+
+state 174
+	WhileStat : WHILE OPPAR $$17 Expression CLPAR . $$18 $$19 Statement  (66)
+	$$18 : .  (64)
+
+	.  reduce 64
+
+	$$18  goto 196
+
+
+state 175
+	WriteList : WriteList COMMA . $$34 WriteElem  (89)
+	$$34 : .  (88)
+
+	.  reduce 88
+
+	$$34  goto 197
+
+
+state 176
+	WriteStat : WRITE OPPAR $$32 WriteList $$33 . CLPAR SCOLON  (86)
+
+	CLPAR  shift 198
+	.  error
+
+
+state 177
+	Subscript : OPBRAK . $$52 AuxExpr4 CLBRAK $$53  (142)
+	$$52 : .  (140)
+
+	.  reduce 140
+
+	$$52  goto 199
+
+
+state 178
+	SubscrList : SubscrList Subscript .  (139)
+
+	.  reduce 139
+
+
+state 179
+	AssignStat : $$39 Variable ASSIGN $$40 Expression . SCOLON $$41  (103)
+	Expression : Expression . OR $$43 AuxExpr1  (109)
+
+	OR  shift 142
+	SCOLON  shift 200
+	.  error
+
+
+state 180
+	CallStat : CALL ID OPPAR $$35 CLPAR SCOLON .  (93)
+
+	.  reduce 93
+
+
+state 181
+	CallStat : CALL ID OPPAR $$36 ExprList CLPAR . SCOLON  (95)
+
+	SCOLON  shift 201
+	.  error
+
+
+state 182
+	ExprList : ExprList COMMA . $$42 Expression  (106)
+	$$42 : .  (105)
+
+	.  reduce 105
+
+	$$42  goto 202
+
+
+state 183
+	ForStat : FOR OPPAR $$23 Variable ASSIGN $$24 . Expression SCOLON $$25 Expression SCOLON $$26 Variable ASSIGN $$27 Expression CLPAR $$28 Statement  (77)
+
+	FALSE  shift 106
+	TRUE  shift 107
+	ID  shift 108
+	INTCT  shift 109
+	CHARCT  shift 110
+	FLOATCT  shift 111
+	NOT  shift 112
+	NEG  shift 113
+	OPPAR  shift 114
+	.  error
+
+	Variable  goto 115
+	FuncCall  goto 116
+	Expression  goto 203
+	AuxExpr1  goto 118
+	AuxExpr2  goto 119
+	AuxExpr3  goto 120
+	AuxExpr4  goto 121
+	Term  goto 122
+	Factor  goto 123
+
+
+state 184
+	IfStat : IF OPPAR $$13 Expression CLPAR $$14 . Statement $$15 ElseStat  (59)
+	$$39 : .  (100)
+
+	CALL  shift 55
+	FOR  shift 56
+	IF  shift 57
+	READ  shift 58
+	REPEAT  shift 59
+	RETURN  shift 60
+	WHILE  shift 61
+	WRITE  shift 62
+	OPBRACE  shift 31
+	SCOLON  shift 64
+	ID  reduce 100
+
+	CompStat  goto 65
+	Statement  goto 204
+	IfStat  goto 67
+	WhileStat  goto 68
+	RepeatStat  goto 69
+	ForStat  goto 70
+	ReadStat  goto 71
+	WriteStat  goto 72
+	AssignStat  goto 73
+	CallStat  goto 74
+	ReturnStat  goto 75
+	$$39  goto 76
+
+
+state 185
+	ReadList : ReadList COMMA $$31 . Variable  (83)
+
+	ID  shift 92
+	.  error
+
+	Variable  goto 205
+
+
+state 186
+	ReadStat : READ OPPAR $$29 ReadList $$30 CLPAR . SCOLON  (80)
+
+	SCOLON  shift 206
+	.  error
+
+
+state 187
+	RepeatStat : REPEAT $$20 Statement WHILE OPPAR $$21 . Expression CLPAR SCOLON $$22  (70)
+
+	FALSE  shift 106
+	TRUE  shift 107
+	ID  shift 108
+	INTCT  shift 109
+	CHARCT  shift 110
+	FLOATCT  shift 111
+	NOT  shift 112
+	NEG  shift 113
+	OPPAR  shift 114
+	.  error
+
+	Variable  goto 115
+	FuncCall  goto 116
+	Expression  goto 207
+	AuxExpr1  goto 118
+	AuxExpr2  goto 119
+	AuxExpr3  goto 120
+	AuxExpr4  goto 121
+	Term  goto 122
+	Factor  goto 123
+
+
+state 188
+	FuncCall : ID OPPAR $$54 CLPAR .  (144)
+
+	.  reduce 144
+
+
+state 189
+	ExprList : ExprList . COMMA $$42 Expression  (106)
+	FuncCall : ID OPPAR $$55 ExprList . CLPAR  (146)
+
+	CLPAR  shift 208
+	COMMA  shift 182
+	.  error
+
+
+state 190
+	Factor : OPPAR $$50 Expression CLPAR .  (134)
+
+	.  reduce 134
+
+
+state 191
+	Expression : Expression OR $$43 AuxExpr1 .  (109)
+	AuxExpr1 : AuxExpr1 . AND $$44 AuxExpr2  (112)
+
+	AND  shift 144
+	OR  reduce 109
+	CLPAR  reduce 109
+	SCOLON  reduce 109
+	COMMA  reduce 109
+
+
+state 192
+	AuxExpr1 : AuxExpr1 AND $$44 AuxExpr2 .  (112)
+
+	.  reduce 112
+
+
+state 193
+	AuxExpr3 : AuxExpr4 RELOP $$46 AuxExpr4 .  (118)
+	AuxExpr4 : AuxExpr4 . ADOP $$47 Term  (121)
+
+	ADOP  shift 146
+	OR  reduce 118
+	AND  reduce 118
+	CLPAR  reduce 118
+	SCOLON  reduce 118
+	COMMA  reduce 118
+
+
+state 194
+	AuxExpr4 : AuxExpr4 ADOP $$47 Term .  (121)
+	Term : Term . MULTOP $$48 Factor  (124)
+
+	MULTOP  shift 147
+	OR  reduce 121
+	AND  reduce 121
+	RELOP  reduce 121
+	ADOP  reduce 121
+	CLPAR  reduce 121
+	CLBRAK  reduce 121
+	SCOLON  reduce 121
+	COMMA  reduce 121
+
+
+state 195
+	Term : Term MULTOP $$48 Factor .  (124)
+
+	.  reduce 124
+
+
+state 196
+	WhileStat : WHILE OPPAR $$17 Expression CLPAR $$18 . $$19 Statement  (66)
+	$$19 : .  (65)
+
+	.  reduce 65
+
+	$$19  goto 209
+
+
+state 197
+	WriteList : WriteList COMMA $$34 . WriteElem  (89)
+
+	FALSE  shift 106
+	TRUE  shift 107
+	ID  shift 108
+	INTCT  shift 109
+	CHARCT  shift 110
+	FLOATCT  shift 111
+	STRING  shift 149
+	NOT  shift 112
+	NEG  shift 113
+	OPPAR  shift 114
+	.  error
+
+	Variable  goto 115
+	FuncCall  goto 116
+	Expression  goto 150
+	AuxExpr1  goto 118
+	AuxExpr2  goto 119
+	AuxExpr3  goto 120
+	AuxExpr4  goto 121
+	Term  goto 122
+	Factor  goto 123
+	WriteElem  goto 210
+
+
+state 198
+	WriteStat : WRITE OPPAR $$32 WriteList $$33 CLPAR . SCOLON  (86)
+
+	SCOLON  shift 211
+	.  error
+
+
+state 199
+	Subscript : OPBRAK $$52 . AuxExpr4 CLBRAK $$53  (142)
+
+	FALSE  shift 106
+	TRUE  shift 107
+	ID  shift 108
+	INTCT  shift 109
+	CHARCT  shift 110
+	FLOATCT  shift 111
+	NEG  shift 113
+	OPPAR  shift 114
+	.  error
+
+	Variable  goto 115
+	FuncCall  goto 116
+	AuxExpr4  goto 212
+	Term  goto 122
+	Factor  goto 123
+
+
+state 200
+	AssignStat : $$39 Variable ASSIGN $$40 Expression SCOLON . $$41  (103)
+	$$41 : .  (102)
+
+	.  reduce 102
+
+	$$41  goto 213
+
+
+state 201
+	CallStat : CALL ID OPPAR $$36 ExprList CLPAR SCOLON .  (95)
+
+	.  reduce 95
+
+
+state 202
+	ExprList : ExprList COMMA $$42 . Expression  (106)
+
+	FALSE  shift 106
+	TRUE  shift 107
+	ID  shift 108
+	INTCT  shift 109
+	CHARCT  shift 110
+	FLOATCT  shift 111
+	NOT  shift 112
+	NEG  shift 113
+	OPPAR  shift 114
+	.  error
+
+	Variable  goto 115
+	FuncCall  goto 116
+	Expression  goto 214
+	AuxExpr1  goto 118
+	AuxExpr2  goto 119
+	AuxExpr3  goto 120
+	AuxExpr4  goto 121
+	Term  goto 122
+	Factor  goto 123
+
+
+state 203
+	ForStat : FOR OPPAR $$23 Variable ASSIGN $$24 Expression . SCOLON $$25 Expression SCOLON $$26 Variable ASSIGN $$27 Expression CLPAR $$28 Statement  (77)
+	Expression : Expression . OR $$43 AuxExpr1  (109)
+
+	OR  shift 142
+	SCOLON  shift 215
+	.  error
+
+
+state 204
+	IfStat : IF OPPAR $$13 Expression CLPAR $$14 Statement . $$15 ElseStat  (59)
+	$$15 : .  (58)
+
+	.  reduce 58
+
+	$$15  goto 216
+
+
+state 205
+	ReadList : ReadList COMMA $$31 Variable .  (83)
+
+	.  reduce 83
+
+
+state 206
+	ReadStat : READ OPPAR $$29 ReadList $$30 CLPAR SCOLON .  (80)
+
+	.  reduce 80
+
+
+state 207
+	RepeatStat : REPEAT $$20 Statement WHILE OPPAR $$21 Expression . CLPAR SCOLON $$22  (70)
+	Expression : Expression . OR $$43 AuxExpr1  (109)
+
+	OR  shift 142
+	CLPAR  shift 217
+	.  error
+
+
+state 208
+	FuncCall : ID OPPAR $$55 ExprList CLPAR .  (146)
+
+	.  reduce 146
+
+
+state 209
+	WhileStat : WHILE OPPAR $$17 Expression CLPAR $$18 $$19 . Statement  (66)
+	$$39 : .  (100)
+
+	CALL  shift 55
+	FOR  shift 56
+	IF  shift 57
+	READ  shift 58
+	REPEAT  shift 59
+	RETURN  shift 60
+	WHILE  shift 61
+	WRITE  shift 62
+	OPBRACE  shift 31
+	SCOLON  shift 64
+	ID  reduce 100
+
+	CompStat  goto 65
+	Statement  goto 218
+	IfStat  goto 67
+	WhileStat  goto 68
+	RepeatStat  goto 69
+	ForStat  goto 70
+	ReadStat  goto 71
+	WriteStat  goto 72
+	AssignStat  goto 73
+	CallStat  goto 74
+	ReturnStat  goto 75
+	$$39  goto 76
+
+
+state 210
+	WriteList : WriteList COMMA $$34 WriteElem .  (89)
+
+	.  reduce 89
+
+
+state 211
+	WriteStat : WRITE OPPAR $$32 WriteList $$33 CLPAR SCOLON .  (86)
+
+	.  reduce 86
+
+
+state 212
+	AuxExpr4 : AuxExpr4 . ADOP $$47 Term  (121)
+	Subscript : OPBRAK $$52 AuxExpr4 . CLBRAK $$53  (142)
+
+	ADOP  shift 146
+	CLBRAK  shift 219
+	.  error
+
+
+state 213
+	AssignStat : $$39 Variable ASSIGN $$40 Expression SCOLON $$41 .  (103)
+
+	.  reduce 103
+
+
+state 214
+	ExprList : ExprList COMMA $$42 Expression .  (106)
+	Expression : Expression . OR $$43 AuxExpr1  (109)
+
+	OR  shift 142
+	CLPAR  reduce 106
+	COMMA  reduce 106
+
+
+state 215
+	ForStat : FOR OPPAR $$23 Variable ASSIGN $$24 Expression SCOLON . $$25 Expression SCOLON $$26 Variable ASSIGN $$27 Expression CLPAR $$28 Statement  (77)
+	$$25 : .  (73)
+
+	.  reduce 73
+
+	$$25  goto 220
+
+
+216: shift/reduce conflict (shift 221, reduce 60) on ELSE
+state 216
+	IfStat : IF OPPAR $$13 Expression CLPAR $$14 Statement $$15 . ElseStat  (59)
+	ElseStat : .  (60)
+
+	ELSE  shift 221
+	CALL  reduce 60
+	FOR  reduce 60
+	IF  reduce 60
+	READ  reduce 60
+	REPEAT  reduce 60
+	RETURN  reduce 60
+	WHILE  reduce 60
+	WRITE  reduce 60
+	ID  reduce 60
+	OPBRACE  reduce 60
+	CLBRACE  reduce 60
+	SCOLON  reduce 60
+
+	ElseStat  goto 222
+
+
+state 217
+	RepeatStat : REPEAT $$20 Statement WHILE OPPAR $$21 Expression CLPAR . SCOLON $$22  (70)
+
+	SCOLON  shift 223
+	.  error
+
+
+state 218
+	WhileStat : WHILE OPPAR $$17 Expression CLPAR $$18 $$19 Statement .  (66)
+
+	.  reduce 66
+
+
+state 219
+	Subscript : OPBRAK $$52 AuxExpr4 CLBRAK . $$53  (142)
+	$$53 : .  (141)
+
+	.  reduce 141
+
+	$$53  goto 224
+
+
+state 220
+	ForStat : FOR OPPAR $$23 Variable ASSIGN $$24 Expression SCOLON $$25 . Expression SCOLON $$26 Variable ASSIGN $$27 Expression CLPAR $$28 Statement  (77)
+
+	FALSE  shift 106
+	TRUE  shift 107
+	ID  shift 108
+	INTCT  shift 109
+	CHARCT  shift 110
+	FLOATCT  shift 111
+	NOT  shift 112
+	NEG  shift 113
+	OPPAR  shift 114
+	.  error
+
+	Variable  goto 115
+	FuncCall  goto 116
+	Expression  goto 225
+	AuxExpr1  goto 118
+	AuxExpr2  goto 119
+	AuxExpr3  goto 120
+	AuxExpr4  goto 121
+	Term  goto 122
+	Factor  goto 123
+
+
+state 221
+	ElseStat : ELSE . $$16 Statement  (62)
+	$$16 : .  (61)
+
+	.  reduce 61
+
+	$$16  goto 226
+
+
+state 222
+	IfStat : IF OPPAR $$13 Expression CLPAR $$14 Statement $$15 ElseStat .  (59)
+
+	.  reduce 59
+
+
+state 223
+	RepeatStat : REPEAT $$20 Statement WHILE OPPAR $$21 Expression CLPAR SCOLON . $$22  (70)
+	$$22 : .  (69)
+
+	.  reduce 69
+
+	$$22  goto 227
+
+
+state 224
+	Subscript : OPBRAK $$52 AuxExpr4 CLBRAK $$53 .  (142)
+
+	.  reduce 142
+
+
+state 225
+	ForStat : FOR OPPAR $$23 Variable ASSIGN $$24 Expression SCOLON $$25 Expression . SCOLON $$26 Variable ASSIGN $$27 Expression CLPAR $$28 Statement  (77)
+	Expression : Expression . OR $$43 AuxExpr1  (109)
+
+	OR  shift 142
+	SCOLON  shift 228
+	.  error
+
+
+state 226
+	ElseStat : ELSE $$16 . Statement  (62)
+	$$39 : .  (100)
+
+	CALL  shift 55
+	FOR  shift 56
+	IF  shift 57
+	READ  shift 58
+	REPEAT  shift 59
+	RETURN  shift 60
+	WHILE  shift 61
+	WRITE  shift 62
+	OPBRACE  shift 31
+	SCOLON  shift 64
+	ID  reduce 100
+
+	CompStat  goto 65
+	Statement  goto 229
+	IfStat  goto 67
+	WhileStat  goto 68
+	RepeatStat  goto 69
+	ForStat  goto 70
+	ReadStat  goto 71
+	WriteStat  goto 72
+	AssignStat  goto 73
+	CallStat  goto 74
+	ReturnStat  goto 75
+	$$39  goto 76
+
+
+state 227
+	RepeatStat : REPEAT $$20 Statement WHILE OPPAR $$21 Expression CLPAR SCOLON $$22 .  (70)
+
+	.  reduce 70
+
+
+state 228
+	ForStat : FOR OPPAR $$23 Variable ASSIGN $$24 Expression SCOLON $$25 Expression SCOLON . $$26 Variable ASSIGN $$27 Expression CLPAR $$28 Statement  (77)
+	$$26 : .  (74)
+
+	.  reduce 74
+
+	$$26  goto 230
+
+
+state 229
+	ElseStat : ELSE $$16 Statement .  (62)
+
+	.  reduce 62
+
+
+state 230
+	ForStat : FOR OPPAR $$23 Variable ASSIGN $$24 Expression SCOLON $$25 Expression SCOLON $$26 . Variable ASSIGN $$27 Expression CLPAR $$28 Statement  (77)
+
+	ID  shift 92
+	.  error
+
+	Variable  goto 231
+
+
+state 231
+	ForStat : FOR OPPAR $$23 Variable ASSIGN $$24 Expression SCOLON $$25 Expression SCOLON $$26 Variable . ASSIGN $$27 Expression CLPAR $$28 Statement  (77)
+
+	ASSIGN  shift 232
+	.  error
+
+
+state 232
+	ForStat : FOR OPPAR $$23 Variable ASSIGN $$24 Expression SCOLON $$25 Expression SCOLON $$26 Variable ASSIGN . $$27 Expression CLPAR $$28 Statement  (77)
+	$$27 : .  (75)
+
+	.  reduce 75
+
+	$$27  goto 233
+
+
+state 233
+	ForStat : FOR OPPAR $$23 Variable ASSIGN $$24 Expression SCOLON $$25 Expression SCOLON $$26 Variable ASSIGN $$27 . Expression CLPAR $$28 Statement  (77)
+
+	FALSE  shift 106
+	TRUE  shift 107
+	ID  shift 108
+	INTCT  shift 109
+	CHARCT  shift 110
+	FLOATCT  shift 111
+	NOT  shift 112
+	NEG  shift 113
+	OPPAR  shift 114
+	.  error
+
+	Variable  goto 115
+	FuncCall  goto 116
+	Expression  goto 234
+	AuxExpr1  goto 118
+	AuxExpr2  goto 119
+	AuxExpr3  goto 120
+	AuxExpr4  goto 121
+	Term  goto 122
+	Factor  goto 123
+
+
+state 234
+	ForStat : FOR OPPAR $$23 Variable ASSIGN $$24 Expression SCOLON $$25 Expression SCOLON $$26 Variable ASSIGN $$27 Expression . CLPAR $$28 Statement  (77)
+	Expression : Expression . OR $$43 AuxExpr1  (109)
+
+	OR  shift 142
+	CLPAR  shift 235
+	.  error
+
+
+state 235
+	ForStat : FOR OPPAR $$23 Variable ASSIGN $$24 Expression SCOLON $$25 Expression SCOLON $$26 Variable ASSIGN $$27 Expression CLPAR . $$28 Statement  (77)
+	$$28 : .  (76)
+
+	.  reduce 76
+
+	$$28  goto 236
+
+
+state 236
+	ForStat : FOR OPPAR $$23 Variable ASSIGN $$24 Expression SCOLON $$25 Expression SCOLON $$26 Variable ASSIGN $$27 Expression CLPAR $$28 . Statement  (77)
+	$$39 : .  (100)
+
+	CALL  shift 55
+	FOR  shift 56
+	IF  shift 57
+	READ  shift 58
+	REPEAT  shift 59
+	RETURN  shift 60
+	WHILE  shift 61
+	WRITE  shift 62
+	OPBRACE  shift 31
+	SCOLON  shift 64
+	ID  reduce 100
+
+	CompStat  goto 65
+	Statement  goto 237
+	IfStat  goto 67
+	WhileStat  goto 68
+	RepeatStat  goto 69
+	ForStat  goto 70
+	ReadStat  goto 71
+	WriteStat  goto 72
+	AssignStat  goto 73
+	CallStat  goto 74
+	ReturnStat  goto 75
+	$$39  goto 76
+
+
+state 237
+	ForStat : FOR OPPAR $$23 Variable ASSIGN $$24 Expression SCOLON $$25 Expression SCOLON $$26 Variable ASSIGN $$27 Expression CLPAR $$28 Statement .  (77)
+
+	.  reduce 77
+
+
+State 216 contains 1 shift/reduce conflict.
+
+
+44 terminals, 101 nonterminals
+147 grammar rules, 238 states

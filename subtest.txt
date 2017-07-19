@@ -1,0 +1,27 @@
+program primos;
+
+
+var 
+	logic achou; int n;
+
+procedure auxproc(int i);
+var
+	logic b;
+{
+	b = true;
+}
+
+function int aux(int i);
+var
+	logic b;
+{
+	b = false;
+	return 0;
+}
+
+{
+	call auxproc(2);
+	call aux(3);
+	n = aux(5);
+	achou = true;
+}
