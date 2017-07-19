@@ -629,9 +629,6 @@ ReadList		:  Variable
 							opnd1.tipo = INTOPND;
 							opnd1.atr.valint = $1;
 							$<quad>$ = GeraQuadrupla(OPREAD, opnd1, opndidle, opndidle);
-							printf("\nquad1prox: %s\n", nomeoperquad[quadaux->oper]);
-							printf("\nquad2: %s\n", nomeoperquad[quadaux2->oper]);
-							printf("\n$quad$: %s\n", nomeoperquad[$<quad>$->oper]);
 							
 							/* Read do vetor */
 							opnd1.atr.valint = 1;
